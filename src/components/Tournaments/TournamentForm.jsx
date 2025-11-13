@@ -1,0 +1,514 @@
+import React, { useState } from "react";
+import {
+  X,
+  Save,
+  Calendar,
+  MapPin,
+  Users,
+  Camera,
+  CheckCircle,
+} from "lucide-react";
+
+const TournamentForm = ({ onSave, onCancel, workers, cameras, tournament = null, isOpen = false }) => {
+  const isEditing = !!tournament;
+  const [showForm, setShowForm] = useState(isOpen);
+
+  const estadosMexico = [
+    "Aguascalientes",
+    "Baja California",
+    "Baja California Sur",
+    "Campeche",
+    "Chiapas",
+    "Chihuahua",
+    "CDMX",
+    "Coahuila",
+    "Colima",
+    "Durango",
+    "Estado de México",
+    "Guanajuato",
+    "Guerrero",
+    "Hidalgo",
+    "Jalisco",
+    "Michoacán",
+    "Morelos",
+    "Nayarit",
+    "Nuevo León",
+    "Oaxaca",
+    "Puebla",
+    "Querétaro",
+    "Quintana Roo",
+    "San Luis Potosí",
+    "Sinaloa",
+    "Sonora",
+    "Tabasco",
+    "Tamaulipas",
+    "Tlaxcala",
+    "Veracruz",
+    "Yucatán",
+    "Zacatecas",
+  ];
+
+  // Inicializar formData basado en si estamos editando o creando
+  const [formData, setFormData] = useState({
+    name: tournament?.name || "",
+    state: tournament?.state || "",
+    location: extractCityFromLocation(tournament?.location) || "",
+    field: tournament?.field || extractFieldFromLocation(tournament?.location) || "",
+    holes: tournament?.holes || [],
+    days: tournament?.days || 1,
+    startDate: tournament?.date || "",
+    endDate: tournament?.endDate || "",
+    status: tournament?.status || "pendiente",
+    workerId: tournament?.workerId?.toString() || "",
+    selectedHoles: tournament?.holes || [],
+  });
+
+  // Helper functions para extraer campo y ciudad de la ubicación
+  function extractFieldFromLocation(location) {
+    if (!location) return "";
+    return location.split(", ")[0] || "";
+  }
+
+  function extractCityFromLocation(location) {
+    if (!location) return "";
+    const parts = location.split(", ");
+    return parts.length > 1 ? parts[1] : "";
+  }
+
+  const [availableWorkers, setAvailableWorkers] = useState([]);
+
+  // Filtrar trabajadores por estado
+  React.useEffect(() => {
+    if (formData.state) {
+      const workersInState = workers.filter(
+        (worker) =>
+          worker.state === formData.state && worker.status === "disponible"
+      );
+      setAvailableWorkers(workersInState);
+    } else {
+      setAvailableWorkers([]);
+    }
+  }, [formData.state, workers]);
+
+  // Calcular cámaras necesarias
+  const requiredCameras = formData.selectedHoles.length * 2;
+
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleHoleSelection = (holeNumber) => {
+    setFormData((prev) => {
+      const isSelected = prev.selectedHoles.includes(holeNumber);
+      const selectedHoles = isSelected
+        ? prev.selectedHoles.filter((h) => h !== holeNumber)
+        : [...prev.selectedHoles, holeNumber].sort((a, b) => a - b);
+
+      return { ...prev, selectedHoles, holes: selectedHoles };
+    });
+  };
+
+  // Función para calcular la fecha de fin automáticamente
+  const calculateEndDate = (startDate, days) => {
+    if (!startDate || !days) return "";
+
+    const start = new Date(startDate);
+    const end = new Date(start);
+    end.setDate(start.getDate() + parseInt(days) - 1);
+
+    return end.toISOString().split("T")[0];
+  };
+
+  // Actualizar fecha de fin cuando cambia la fecha de inicio o los días
+  React.useEffect(() => {
+    if (formData.startDate && formData.days) {
+      const endDate = calculateEndDate(formData.startDate, formData.days);
+      setFormData((prev) => ({ ...prev, endDate }));
+    }
+  }, [formData.startDate, formData.days]);
+
+  // Actualizar estado automáticamente basado en fecha
+  React.useEffect(() => {
+    if (formData.startDate && formData.endDate) {
+      const today = new Date();
+      const startDate = new Date(formData.startDate);
+      const endDate = new Date(formData.endDate);
+
+      let newStatus = "pendiente";
+      if (today >= startDate && today <= endDate) {
+        newStatus = "activo";
+      } else if (today > endDate) {
+        newStatus = "terminado";
+      }
+
+      setFormData((prev) => ({ ...prev, status: newStatus }));
+    }
+  }, [formData.startDate, formData.endDate]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    console.log("🎯 Iniciando ", isEditing ? "edición" : "creación", " de torneo...");
+
+    const selectedWorker = workers.find(
+      (w) => w.id === parseInt(formData.workerId)
+    );
+
+    // Para edición, usar el ID existente; para creación, generar nuevo
+    const tournamentId = isEditing ? tournament.id : Date.now();
+
+    const tournamentData = {
+      ...(isEditing && { id: tournamentId }), // Solo incluir ID si estamos editando
+      name: formData.name,
+      location: `${formData.field}, ${formData.location}`,
+      state: formData.state,
+      date: formData.startDate,
+      endDate: formData.endDate,
+      status: formData.status,
+      worker: selectedWorker ? selectedWorker.name : "Por asignar",
+      workerId: formData.workerId,
+      cameras: tournament?.cameras || [], // Mantener cámaras existentes si estamos editando
+      holes: formData.selectedHoles,
+      days: parseInt(formData.days) || 1,
+      field: formData.field,
+      ...(isEditing && { updatedAt: new Date().toISOString() }),
+      ...(!isEditing && { createdAt: new Date().toISOString() })
+    };
+
+    console.log("📦 Datos del torneo a ", isEditing ? "actualizar" : "guardar", ":", tournamentData);
+
+    try {
+      console.log("🚀 Llamando a onSave...");
+      const result = await onSave(tournamentData);
+      console.log("✅ Torneo ", isEditing ? "actualizado" : "guardado", " exitosamente. Resultado:", result);
+
+      setShowForm(false);
+      // Solo resetear el form si no estamos editando
+      if (!isEditing) {
+        setFormData({
+          name: "",
+          state: "",
+          location: "",
+          field: "",
+          holes: [],
+          days: 1,
+          startDate: "",
+          endDate: "",
+          status: "pendiente",
+          workerId: "",
+          selectedHoles: [],
+        });
+      }
+    } catch (error) {
+      console.error("❌ Error ", isEditing ? "actualizando" : "guardando", " torneo:", error);
+      alert(`Error al ${isEditing ? 'actualizar' : 'guardar'} el torneo. Por favor intenta nuevamente.`);
+    }
+  };
+
+  const handleCancel = () => {
+    setShowForm(false);
+    onCancel?.();
+  };
+
+  // Si el formulario no está abierto y estamos en modo creación, mostrar botón
+  if (!showForm && !isEditing) {
+    return (
+      <button
+        onClick={() => setShowForm(true)}
+        className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+      >
+        <Save className="w-5 h-5" />
+        <span>Nuevo Torneo</span>
+      </button>
+    );
+  }
+
+  // Si estamos en modo edición pero el formulario no está abierto, no mostrar nada
+  if (isEditing && !showForm) {
+    return null;
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="bg-slate-800/90 backdrop-blur-xl rounded-2xl border border-white/10 p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-xl font-semibold text-white">
+            {isEditing ? 'Editar Torneo' : 'Nuevo Torneo'}
+          </h3>
+          <button
+            onClick={handleCancel}
+            className="text-gray-400 hover:text-white transition-colors"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Información Básica */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">
+                Nombre del Torneo *
+              </label>
+              <input
+                type="text"
+                required
+                value={formData.name}
+                onChange={(e) => handleInputChange("name", e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                placeholder="Ej: Torneo Empresarial CDMX"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">
+                Estado *
+              </label>
+              <select
+                required
+                value={formData.state}
+                onChange={(e) => handleInputChange("state", e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              >
+                <option className="text-white bg-gray-700" value="">
+                  Seleccionar estado
+                </option>
+                {estadosMexico.map((estado) => (
+                  <option
+                    className="text-white bg-gray-700"
+                    key={estado}
+                    value={estado}
+                  >
+                    {estado}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Ubicación */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">
+                Campo de Golf *
+              </label>
+              <input
+                type="text"
+                required
+                value={formData.field}
+                onChange={(e) => handleInputChange("field", e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                placeholder="Ej: Club de Golf Chapultepec"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">
+                Ciudad/Localidad *
+              </label>
+              <input
+                type="text"
+                required
+                value={formData.location}
+                onChange={(e) => handleInputChange("location", e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                placeholder="Ej: Ciudad de México"
+              />
+            </div>
+          </div>
+
+          {/* Fechas y Duración */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">
+                <Calendar className="w-4 h-4 inline mr-2" />
+                Fecha de Inicio *
+              </label>
+              <input
+                type="date"
+                required
+                value={formData.startDate}
+                onChange={(e) => handleInputChange("startDate", e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">
+                Días de Duración *
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="30"
+                required
+                value={formData.days || ""}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const daysValue = value === "" ? 1 : parseInt(value);
+                  handleInputChange("days", daysValue);
+                }}
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">
+                Fecha de Fin (Automática)
+              </label>
+              <input
+                type="date"
+                readOnly
+                value={formData.endDate || ""}
+                className="w-full bg-white/10 border border-white/10 rounded-lg px-4 py-2 text-gray-400 cursor-not-allowed"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Calculada automáticamente
+              </p>
+            </div>
+          </div>
+
+          {/* Selección de Hoyos */}
+          <div>
+            <label className="block text-sm font-medium text-gray-400 mb-4">
+              Hoyos Asegurados * (2 cámaras por hoyo)
+            </label>
+            <div className="grid grid-cols-6 md:grid-cols-9 lg:grid-cols-18 gap-2">
+              {Array.from({ length: 10 }, (_, i) => i + 1).map((hole) => (
+                <button
+                  key={hole}
+                  type="button"
+                  onClick={() => handleHoleSelection(hole)}
+                  className={`p-3 rounded-lg border-2 transition-all relative ${
+                    formData.selectedHoles.includes(hole)
+                      ? "bg-emerald-500/20 border-emerald-500 text-emerald-400"
+                      : "bg-white/5 border-white/10 text-gray-400 hover:border-emerald-500/50"
+                  }`}
+                >
+                  {hole}
+                  {formData.selectedHoles.includes(hole) && (
+                    <CheckCircle className="w-3 h-3 absolute -top-1 -right-1" />
+                  )}
+                </button>
+              ))}
+            </div>
+            <div className="mt-2 text-sm text-gray-400">
+              Seleccionados: {formData.selectedHoles.join(", ") || "Ninguno"} |
+              Cámaras requeridas: {requiredCameras}
+            </div>
+          </div>
+
+          {/* Trabajador Asignado */}
+          <div>
+            <label className="block text-sm font-medium text-gray-400 mb-2">
+              <Users className="w-4 h-4 inline mr-2" />
+              Visor/Trabajador{" "}
+              {formData.state && `(Disponibles en ${formData.state})`}
+            </label>
+            <select
+              value={formData.workerId}
+              onChange={(e) => handleInputChange("workerId", e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            >
+              <option className="text-white bg-gray-700" value="">
+                Seleccionar trabajador (opcional)
+              </option>
+              {availableWorkers.map((worker) => (
+                <option
+                  className="text-white bg-gray-700"
+                  key={worker.id}
+                  value={worker.id}
+                >
+                  {worker.name} - {worker.phone}
+                </option>
+              ))}
+            </select>
+            {formData.state && availableWorkers.length === 0 && (
+              <p className="text-yellow-400 text-sm mt-1">
+                No hay trabajadores disponibles en {formData.state}
+              </p>
+            )}
+          </div>
+
+          {/* Resumen y Botones */}
+          <div className="bg-white/5 rounded-lg p-4">
+            <h4 className="font-semibold text-white mb-2">
+              Resumen del Torneo
+            </h4>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="text-gray-400">Cámaras necesarias:</span>
+                <span className="text-white ml-2">{requiredCameras}</span>
+              </div>
+              <div>
+                <span className="text-gray-400">Estado:</span>
+                <span
+                  className={`ml-2 ${
+                    formData.status === "activo"
+                      ? "text-green-400"
+                      : formData.status === "pendiente"
+                      ? "text-yellow-400"
+                      : "text-blue-400"
+                  }`}
+                >
+                  {formData.status}
+                </span>
+              </div>
+              <div>
+                <span className="text-gray-400">Hoyos:</span>
+                <span className="text-white ml-2">
+                  {formData.selectedHoles.length}
+                </span>
+              </div>
+              <div>
+                <span className="text-gray-400">Duración:</span>
+                <span className="text-white ml-2">{formData.days} día(s)</span>
+              </div>
+              {formData.startDate && formData.endDate && (
+                <>
+                  <div>
+                    <span className="text-gray-400">Inicio:</span>
+                    <span className="text-white ml-2">
+                      {formData.startDate}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400">Fin:</span>
+                    <span className="text-white ml-2">{formData.endDate}</span>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="flex space-x-4 pt-4">
+            <button
+              type="submit"
+              disabled={
+                !formData.name ||
+                !formData.state ||
+                !formData.field ||
+                !formData.location ||
+                !formData.startDate ||
+                formData.selectedHoles.length === 0
+              }
+              className="bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition-colors flex items-center space-x-2"
+            >
+              <Save className="w-5 h-5" />
+              <span>{isEditing ? 'Actualizar Torneo' : 'Crear Torneo'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-colors"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default TournamentForm;
