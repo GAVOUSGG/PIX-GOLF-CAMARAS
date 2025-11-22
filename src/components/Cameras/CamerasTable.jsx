@@ -8,6 +8,8 @@ import {
   User,
   MessageCircle,
   Hash,
+  UserCheck,
+  UserX,
 } from "lucide-react";
 import StatusBadge from "../UI/StatusBadge";
 
@@ -64,6 +66,34 @@ const CamerasTable = ({
     }
   };
 
+  // Función para obtener el badge de asignación
+  const getAssignmentBadge = (camera) => {
+    if (camera.assignedTo) {
+      return (
+        <div className="flex items-center space-x-2">
+          <UserCheck className="w-4 h-4 text-emerald-400" />
+          <div>
+            <div className="text-sm text-emerald-400 font-medium">
+              {camera.assignedTo}
+            </div>
+            {camera.assignedWorkerId && (
+              <div className="text-xs text-emerald-300">
+                ID: {camera.assignedWorkerId}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex items-center space-x-2">
+          <UserX className="w-4 h-4 text-gray-400" />
+          <span className="text-gray-500 text-sm italic">No asignada</span>
+        </div>
+      );
+    }
+  };
+
   return (
     <>
       <div className="bg-black/20 rounded-2xl border border-white/10 overflow-hidden">
@@ -115,6 +145,11 @@ const CamerasTable = ({
                           <div className="text-sm font-medium text-white">
                             {camera.id}
                           </div>
+                          {camera.assignedTo && (
+                            <div className="text-xs text-emerald-400">
+                              En uso
+                            </div>
+                          )}
                         </div>
                       </div>
                     </td>
@@ -180,22 +215,19 @@ const CamerasTable = ({
                       </div>
                     </td>
 
-                    {/* Asignada a */}
+                    {/* Asignada a - COLUMNA ACTUALIZADA */}
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center space-x-2">
-                        {camera.assignedTo ? (
-                          <>
-                            <User className="w-4 h-4 text-gray-400" />
-                            <div className="text-sm text-gray-300">
-                              {camera.assignedTo}
-                            </div>
-                          </>
-                        ) : (
-                          <span className="text-gray-500 text-sm italic">
-                            No asignada
-                          </span>
-                        )}
-                      </div>
+                      {getAssignmentBadge(camera)}
+                      {camera.assignedTo && camera.status === "en uso" && (
+                        <div className="text-xs text-red-400 mt-1">
+                          ⚡ En torneo activo
+                        </div>
+                      )}
+                      {camera.assignedTo && camera.status === "en envio" && (
+                        <div className="text-xs text-blue-400 mt-1">
+                          🚚 En envío
+                        </div>
+                      )}
                     </td>
 
                     {/* Acciones */}

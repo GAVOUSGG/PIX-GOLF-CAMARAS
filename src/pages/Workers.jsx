@@ -6,6 +6,7 @@ import { Search, Filter, X } from "lucide-react";
 
 const Workers = ({
   workersData,
+  camerasData, // ← Agregar esta prop
   onCreateWorker,
   onUpdateWorker,
   onDeleteWorker,
@@ -125,7 +126,11 @@ const Workers = ({
             mostrados
           </p>
         </div>
-        <WorkerForm onSave={handleSaveWorker} onCancel={handleCancelForm} />
+        <WorkerForm
+          onSave={handleSaveWorker}
+          onCancel={handleCancelForm}
+          camerasData={camerasData} // ← Pasar camerasData al formulario
+        />
       </div>
 
       {/* Buscador y Filtros */}
@@ -266,6 +271,7 @@ const Workers = ({
           onSave={handleSaveWorker}
           onCancel={handleCancelForm}
           worker={editingWorker}
+          camerasData={camerasData} // ← Pasar camerasData al formulario
           isOpen={true}
         />
       )}

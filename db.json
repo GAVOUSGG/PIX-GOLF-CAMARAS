@@ -1,22 +1,204 @@
 {
   "tournaments": [
     {
-      "id": "509e",
-      "name": "porsche",
-      "location": "asdasd, asdas",
+      "id": "aae9",
+      "name": "Marketing Y Transformación Digital",
+      "location": "El Cielo CC, Tlajomulco",
       "state": "Jalisco",
-      "date": "2025-11-30",
-      "endDate": "2025-11-30",
-      "status": "activo",
-      "worker": "Por asignar",
+      "date": "2025-11-20",
+      "endDate": "2025-11-20",
+      "status": "terminado",
+      "worker": "Jonathan Diaz",
+      "workerId": "5",
+      "cameras": [],
+      "holes": [
+        1
+      ],
+      "days": 1,
+      "field": "El Cielo CC",
+      "createdAt": "2025-11-20T03:44:30.093Z",
+      "updatedAt": "2025-11-21T01:14:03.042Z"
+    },
+    {
+      "id": "aecb",
+      "name": "Torneo de Golf Conadiac",
+      "location": "Higuera, Puerto Vallarta",
+      "state": "Nayarit",
+      "date": "2025-11-20",
+      "endDate": "2025-11-20",
+      "status": "terminado",
+      "worker": "Janeth Elizabeth Gutierrez Aguilar",
+      "workerId": "6",
+      "cameras": [],
+      "holes": [
+        1
+      ],
+      "days": 1,
+      "field": "Higuera",
+      "createdAt": "2025-11-20T04:19:42.613Z",
+      "updatedAt": "2025-11-21T01:14:10.047Z"
+    },
+    {
+      "id": "4563",
+      "name": "4to Torneo Foottgolf Televisa Puebla",
+      "location": "La Vista, Puebla",
+      "state": "Puebla",
+      "date": "2025-11-20",
+      "endDate": "2025-11-20",
+      "status": "terminado",
+      "worker": "Oscar Uriel Perez",
+      "workerId": "7",
+      "cameras": [],
+      "holes": [
+        9,
+        14
+      ],
+      "days": 1,
+      "field": "La Vista",
+      "createdAt": "2025-11-20T04:28:19.404Z",
+      "updatedAt": "2025-11-21T01:14:14.269Z"
+    },
+    {
+      "id": "744f",
+      "name": "5TO TORNEO DE GOLF MIXTO PRO CAPILLA SAGRADO CORAZON",
+      "location": "Alamo CC, Celaya",
+      "state": "Guanajuato",
+      "date": "2025-11-21",
+      "endDate": "2025-11-21",
+      "status": "terminado",
+      "worker": "Ernesto Trejo",
+      "workerId": "8",
+      "cameras": [],
+      "holes": [
+        4,
+        8,
+        13,
+        17
+      ],
+      "days": 1,
+      "field": "Alamo CC",
+      "createdAt": "2025-11-21T01:17:04.118Z",
+      "updatedAt": "2025-11-22T16:45:57.727Z"
+    },
+    {
+      "id": "952f",
+      "name": "3ER TORNEO DE GOLF ALUMNI",
+      "location": "Atlas Country Club, Tlaquepaque",
+      "state": "Jalisco",
+      "date": "2025-11-21",
+      "endDate": "2025-11-21",
+      "status": "terminado",
+      "worker": "Ernesto De Keratry",
+      "workerId": "1",
+      "cameras": [],
+      "holes": [
+        14
+      ],
+      "days": 1,
+      "field": "Atlas Country Club",
+      "createdAt": "2025-11-21T01:32:56.099Z",
+      "updatedAt": "2025-11-22T16:46:02.041Z"
+    },
+    {
+      "id": "f6c5",
+      "name": "TORNEO ROTARIO CLUB TIJUANA",
+      "location": "Club Campestre de Tijuana, Tijuana",
+      "state": "Baja California",
+      "date": "2025-11-21",
+      "endDate": "2025-11-21",
+      "status": "terminado",
+      "worker": "Fabian",
+      "workerId": "9",
+      "cameras": [],
+      "holes": [
+        2,
+        18
+      ],
+      "days": 1,
+      "field": "Club Campestre de Tijuana",
+      "createdAt": "2025-11-21T01:34:38.499Z",
+      "updatedAt": "2025-11-22T16:46:06.834Z"
+    },
+    {
+      "id": "386b",
+      "name": "TORNEO PORSCHE GDL 2025",
+      "location": "Guadalajara Country Club , Zapopan",
+      "state": "Jalisco",
+      "date": "2025-11-21",
+      "endDate": "2025-11-21",
+      "status": "terminado",
+      "worker": "Gabriel Camberos Trinidad",
       "workerId": "3",
       "cameras": [],
       "holes": [
-        2
+        4,
+        15
+      ],
+      "days": 1,
+      "field": "Guadalajara Country Club ",
+      "createdAt": "2025-11-21T02:00:28.503Z",
+      "updatedAt": "2025-11-22T16:46:11.652Z"
+    },
+    {
+      "id": "295b",
+      "name": "TORNEO DE PAREJAS 2025",
+      "location": "Golf Juriquilla, Juriquilla",
+      "state": "Querétaro",
+      "date": "2025-11-21",
+      "endDate": "2025-11-22",
+      "status": "activo",
+      "worker": "Gabriela Granados",
+      "workerId": "10",
+      "cameras": [],
+      "holes": [
+        9
+      ],
+      "days": 2,
+      "field": "Golf Juriquilla",
+      "createdAt": "2025-11-21T02:03:03.113Z",
+      "updatedAt": "2025-11-22T17:42:03.793Z"
+    },
+    {
+      "id": "0c0b",
+      "name": "71 ANIVERSARIO CLUB CAMPESTRE DE DURANGO",
+      "location": "Campestre de Durango, Durango",
+      "state": "Durango",
+      "date": "2025-11-22",
+      "endDate": "2025-11-23",
+      "status": "activo",
+      "worker": "Por asignar",
+      "workerId": "",
+      "cameras": [],
+      "holes": [
+        1,
+        17
+      ],
+      "days": 2,
+      "field": "Campestre de Durango",
+      "createdAt": "2025-11-22T16:49:49.349Z",
+      "updatedAt": "2025-11-22T17:09:21.612Z"
+    },
+    {
+      "id": "0ae7",
+      "name": "asasds",
+      "location": "asdasd, asdasdas",
+      "state": "Jalisco",
+      "date": "2025-11-30",
+      "endDate": "2025-11-30",
+      "status": "pendiente",
+      "worker": "Ernesto De Keratry",
+      "workerId": "1",
+      "cameras": [
+        "CS1",
+        "CS2"
+      ],
+      "holes": [
+        1
       ],
       "days": 1,
       "field": "asdasd",
-      "updatedAt": "2025-11-14T19:53:26.958Z"
+      "cameraStatus": "complete",
+      "createdAt": "2025-11-22T18:13:17.455Z"
     }
   ],
   "workers": [
@@ -28,9 +210,12 @@
       "email": "ernestodekeratry@pixgolf.com",
       "status": "disponible",
       "specialty": "Mantenimiento equipos",
-      "camerasAssigned": [],
+      "camerasAssigned": [
+        "CS1",
+        "CS2"
+      ],
       "photo": "",
-      "updatedAt": "2025-11-13T04:13:11.838Z"
+      "updatedAt": "2025-11-22T18:02:01.030Z"
     },
     {
       "id": "2",
@@ -64,9 +249,84 @@
       "email": "arturo@gmail.com",
       "status": "disponible",
       "specialty": "Instalación cámaras solares",
+      "camerasAssigned": [
+        "CS2",
+        "CS1"
+      ],
+      "photo": "",
+      "updatedAt": "2025-11-22T17:38:31.803Z"
+    },
+    {
+      "id": "5",
+      "name": "Jonathan Diaz",
+      "state": "Jalisco",
+      "phone": "3320431567",
+      "email": "sincorreo@gmail.com",
+      "status": "activo",
+      "specialty": "Instalación cámaras solares",
       "camerasAssigned": [],
       "photo": "",
-      "updatedAt": "2025-11-13T04:14:49.631Z"
+      "updatedAt": "2025-11-20T04:45:28.838Z"
+    },
+    {
+      "id": "6",
+      "name": "Janeth Elizabeth Gutierrez Aguilar",
+      "state": "Jalisco",
+      "phone": "3221902625",
+      "email": "correo@gmail.com",
+      "status": "activo",
+      "specialty": "Instalación cámaras solares",
+      "camerasAssigned": [],
+      "photo": "",
+      "updatedAt": "2025-11-20T04:45:20.409Z"
+    },
+    {
+      "id": "7",
+      "name": "Oscar Uriel Perez",
+      "state": "Puebla",
+      "phone": "221270536",
+      "email": "correo@gmail.com",
+      "status": "activo",
+      "specialty": "Instalación cámaras solares",
+      "camerasAssigned": [],
+      "photo": "",
+      "updatedAt": "2025-11-20T04:45:36.720Z"
+    },
+    {
+      "id": "8",
+      "name": "Ernesto Trejo",
+      "state": "Guanajuato",
+      "phone": " 55 2955 7740",
+      "email": "correo@gmail.com",
+      "status": "disponible",
+      "specialty": "Instalación cámaras solares",
+      "camerasAssigned": [],
+      "photo": "",
+      "createdAt": "2025-11-21T01:17:46.601Z"
+    },
+    {
+      "id": "9",
+      "name": "Fabian",
+      "state": "Baja California",
+      "phone": "1 663 125 1299",
+      "email": "correo@gmail.com",
+      "status": "disponible",
+      "specialty": "Instalación cámaras solares",
+      "camerasAssigned": [],
+      "photo": "",
+      "createdAt": "2025-11-21T01:35:20.176Z"
+    },
+    {
+      "id": "10",
+      "name": "Gabriela Granados",
+      "state": "Querétaro",
+      "phone": " 55 3962 9788",
+      "email": "correo@gmail.com",
+      "status": "disponible",
+      "specialty": "Instalación cámaras solares",
+      "camerasAssigned": [],
+      "photo": "",
+      "createdAt": "2025-11-21T02:03:47.989Z"
     }
   ],
   "cameras": [
@@ -75,13 +335,25 @@
       "model": "Hikvision DS-2XS6A25G0-I/CH20S40",
       "type": "Solar",
       "status": "disponible",
-      "location": "Jalisco",
+      "location": "Almacén",
       "serialNumber": "12345678910",
       "simNumber": "3321712415",
-      "assignedTo": "Ernesto De Keratry",
+      "assignedTo": "",
       "notes": "Antena rota",
       "createdAt": "2025-11-14T18:26:03.368Z",
-      "updatedAt": "2025-11-14T19:50:09.648Z"
+      "updatedAt": "2025-11-22T17:34:51.898Z"
+    },
+    {
+      "id": "CS2",
+      "model": "Hikvision DS-2XS6A25G0-I/CH20S40",
+      "type": "Solar",
+      "status": "disponible",
+      "location": "Almacén",
+      "serialNumber": "asdasd",
+      "simNumber": "3321712415",
+      "assignedTo": "",
+      "notes": "",
+      "createdAt": "2025-11-22T17:35:53.924Z"
     }
   ],
   "shipments": [

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   X,
   Save,
@@ -7,9 +7,18 @@ import {
   Users,
   Camera,
   CheckCircle,
+  AlertCircle,
+  Package,
 } from "lucide-react";
 
-const TournamentForm = ({ onSave, onCancel, workers, cameras, tournament = null, isOpen = false }) => {
+const TournamentForm = ({
+  onSave,
+  onCancel,
+  workers,
+  cameras,
+  tournament = null,
+  isOpen = false,
+}) => {
   const isEditing = !!tournament;
   const [showForm, setShowForm] = useState(isOpen);
 
@@ -48,21 +57,6 @@ const TournamentForm = ({ onSave, onCancel, workers, cameras, tournament = null,
     "Zacatecas",
   ];
 
-  // Inicializar formData basado en si estamos editando o creando
-  const [formData, setFormData] = useState({
-    name: tournament?.name || "",
-    state: tournament?.state || "",
-    location: extractCityFromLocation(tournament?.location) || "",
-    field: tournament?.field || extractFieldFromLocation(tournament?.location) || "",
-    holes: tournament?.holes || [],
-    days: tournament?.days || 1,
-    startDate: tournament?.date || "",
-    endDate: tournament?.endDate || "",
-    status: tournament?.status || "pendiente",
-    workerId: tournament?.workerId?.toString() || "",
-    selectedHoles: tournament?.holes || [],
-  });
-
   // Helper functions para extraer campo y ciudad de la ubicación
   function extractFieldFromLocation(location) {
     if (!location) return "";
@@ -75,23 +69,145 @@ const TournamentForm = ({ onSave, onCancel, workers, cameras, tournament = null,
     return parts.length > 1 ? parts[1] : "";
   }
 
-  const [availableWorkers, setAvailableWorkers] = useState([]);
+  // Inicializar formData
+  const [formData, setFormData] = useState({
+    name: tournament?.name || "",
+    state: tournament?.state || "",
+    location: extractCityFromLocation(tournament?.location) || "",
+    field:
+      tournament?.field || extractFieldFromLocation(tournament?.location) || "",
+    holes: tournament?.holes || [],
+    days: tournament?.days || 1,
+    startDate: tournament?.date || "",
+    endDate: tournament?.endDate || "",
+    status: tournament?.status || "pendiente",
+    workerId: tournament?.workerId?.toString() || "",
+    selectedHoles: tournament?.holes || [],
+    assignedCameras: tournament?.cameras || [], // Nuevo: cámaras asignadas
+  });
 
-  // Filtrar trabajadores por estado
-  React.useEffect(() => {
+  const [availableWorkers, setAvailableWorkers] = useState([]);
+  const [availableCameras, setAvailableCameras] = useState([]);
+  const [cameraAssignmentStatus, setCameraAssignmentStatus] =
+    useState("pending"); // pending, complete, insufficient, none
+
+  // Calcular cámaras necesarias
+  const requiredCameras = formData.selectedHoles.length * 2;
+
+  // Filtrar trabajadores por estado seleccionado
+  useEffect(() => {
     if (formData.state) {
       const workersInState = workers.filter(
         (worker) =>
           worker.state === formData.state && worker.status === "disponible"
       );
       setAvailableWorkers(workersInState);
+
+      // Si el trabajador actual no está en el nuevo estado, limpiar selección
+      if (
+        formData.workerId &&
+        !workersInState.find((w) => w.id.toString() === formData.workerId)
+      ) {
+        setFormData((prev) => ({ ...prev, workerId: "", assignedCameras: [] }));
+      }
     } else {
       setAvailableWorkers([]);
     }
-  }, [formData.state, workers]);
+  }, [formData.state, workers, formData.workerId]);
 
-  // Calcular cámaras necesarias
-  const requiredCameras = formData.selectedHoles.length * 2;
+  // Encontrar cámaras disponibles del trabajador seleccionado
+  useEffect(() => {
+    if (formData.workerId) {
+      const selectedWorker = workers.find(
+        (w) => w.id.toString() === formData.workerId
+      );
+
+      if (
+        selectedWorker &&
+        selectedWorker.camerasAssigned &&
+        selectedWorker.camerasAssigned.length > 0
+      ) {
+        // Obtener información completa de las cámaras asignadas al trabajador
+        const workerCameras = cameras.filter(
+          (camera) =>
+            selectedWorker.camerasAssigned.includes(camera.id) &&
+            camera.status === "disponible"
+        );
+        setAvailableCameras(workerCameras);
+
+        // Auto-asignar cámaras si el trabajador tiene suficientes
+        if (workerCameras.length >= requiredCameras) {
+          const camerasToAssign = workerCameras
+            .slice(0, requiredCameras)
+            .map((c) => c.id);
+          setFormData((prev) => ({
+            ...prev,
+            assignedCameras: camerasToAssign,
+          }));
+          setCameraAssignmentStatus("complete");
+        } else if (workerCameras.length > 0) {
+          // Asignar las que tenga disponibles
+          setFormData((prev) => ({
+            ...prev,
+            assignedCameras: workerCameras.map((c) => c.id),
+          }));
+          setCameraAssignmentStatus("insufficient");
+        } else {
+          setFormData((prev) => ({ ...prev, assignedCameras: [] }));
+          setCameraAssignmentStatus("none");
+        }
+      } else {
+        // El trabajador no tiene cámaras asignadas
+        setAvailableCameras([]);
+        setFormData((prev) => ({ ...prev, assignedCameras: [] }));
+        setCameraAssignmentStatus("none");
+      }
+    } else {
+      setAvailableCameras([]);
+      setFormData((prev) => ({ ...prev, assignedCameras: [] }));
+      setCameraAssignmentStatus("pending");
+    }
+  }, [formData.workerId, workers, cameras, requiredCameras]);
+
+  // Calcular la fecha de fin automáticamente
+  useEffect(() => {
+    if (formData.startDate && formData.days) {
+      const start = new Date(formData.startDate);
+      const end = new Date(start);
+      end.setDate(start.getDate() + parseInt(formData.days) - 1);
+      setFormData((prev) => ({
+        ...prev,
+        endDate: end.toISOString().split("T")[0],
+      }));
+    }
+  }, [formData.startDate, formData.days]);
+
+  // Actualizar estado automáticamente basado en fecha y disponibilidad de cámaras
+  useEffect(() => {
+    let newStatus = "pendiente";
+
+    if (formData.startDate && formData.endDate) {
+      const today = new Date();
+      const startDate = new Date(formData.startDate);
+      const endDate = new Date(formData.endDate);
+
+      if (today >= startDate && today <= endDate) {
+        newStatus = "activo";
+      } else if (today > endDate) {
+        newStatus = "terminado";
+      }
+    }
+
+    // Si no hay cámaras suficientes, marcar como "pendiente de cámaras"
+    if (
+      cameraAssignmentStatus === "none" ||
+      cameraAssignmentStatus === "insufficient"
+    ) {
+      newStatus = "pendiente";
+    }
+
+    setFormData((prev) => ({ ...prev, status: newStatus }));
+  }, [formData.startDate, formData.endDate, cameraAssignmentStatus]);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -108,82 +224,83 @@ const TournamentForm = ({ onSave, onCancel, workers, cameras, tournament = null,
     });
   };
 
-  // Función para calcular la fecha de fin automáticamente
-  const calculateEndDate = (startDate, days) => {
-    if (!startDate || !days) return "";
+  // Función para asignar cámaras manualmente
+  const handleCameraSelection = (cameraId) => {
+    setFormData((prev) => {
+      const isSelected = prev.assignedCameras.includes(cameraId);
+      const assignedCameras = isSelected
+        ? prev.assignedCameras.filter((id) => id !== cameraId)
+        : [...prev.assignedCameras, cameraId];
 
-    const start = new Date(startDate);
-    const end = new Date(start);
-    end.setDate(start.getDate() + parseInt(days) - 1);
-
-    return end.toISOString().split("T")[0];
+      return { ...prev, assignedCameras };
+    });
   };
 
-  // Actualizar fecha de fin cuando cambia la fecha de inicio o los días
-  React.useEffect(() => {
-    if (formData.startDate && formData.days) {
-      const endDate = calculateEndDate(formData.startDate, formData.days);
-      setFormData((prev) => ({ ...prev, endDate }));
-    }
-  }, [formData.startDate, formData.days]);
-
-  // Actualizar estado automáticamente basado en fecha
-  React.useEffect(() => {
-    if (formData.startDate && formData.endDate) {
-      const today = new Date();
-      const startDate = new Date(formData.startDate);
-      const endDate = new Date(formData.endDate);
-
-      let newStatus = "pendiente";
-      if (today >= startDate && today <= endDate) {
-        newStatus = "activo";
-      } else if (today > endDate) {
-        newStatus = "terminado";
-      }
-
-      setFormData((prev) => ({ ...prev, status: newStatus }));
-    }
-  }, [formData.startDate, formData.endDate]);
+  // Obtener cámaras disponibles en el almacén para asignación manual
+  const availableWarehouseCameras = useMemo(() => {
+    return cameras.filter(
+      (camera) =>
+        camera.status === "disponible" &&
+        camera.location === "Almacén" &&
+        !formData.assignedCameras.includes(camera.id)
+    );
+  }, [cameras, formData.assignedCameras]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("🎯 Iniciando ", isEditing ? "edición" : "creación", " de torneo...");
-
-    const selectedWorker = workers.find(
-      (w) => w.id === parseInt(formData.workerId)
+    console.log(
+      "🎯 Iniciando ",
+      isEditing ? "edición" : "creación",
+      " de torneo..."
     );
 
+    // Buscar el trabajador seleccionado
+    const selectedWorker = formData.workerId
+      ? workers.find((w) => w.id.toString() === formData.workerId.toString())
+      : null;
+
+    console.log("👤 Trabajador encontrado:", selectedWorker);
+
     // Para edición, usar el ID existente; para creación, generar nuevo
-    const tournamentId = isEditing ? tournament.id : Date.now();
+    const tournamentId = isEditing ? tournament.id : Date.now().toString();
+
+    // Determinar el estado final considerando las cámaras
+    let finalStatus = formData.status;
+    if (
+      cameraAssignmentStatus === "none" ||
+      cameraAssignmentStatus === "insufficient"
+    ) {
+      finalStatus = "pendiente";
+    }
 
     const tournamentData = {
-      ...(isEditing && { id: tournamentId }), // Solo incluir ID si estamos editando
+      ...(isEditing && { id: tournamentId }),
       name: formData.name,
       location: `${formData.field}, ${formData.location}`,
       state: formData.state,
       date: formData.startDate,
       endDate: formData.endDate,
-      status: formData.status,
+      status: finalStatus,
       worker: selectedWorker ? selectedWorker.name : "Por asignar",
-      workerId: formData.workerId,
-      cameras: tournament?.cameras || [], // Mantener cámaras existentes si estamos editando
+      workerId: formData.workerId || "",
+      cameras: formData.assignedCameras,
       holes: formData.selectedHoles,
       days: parseInt(formData.days) || 1,
       field: formData.field,
+      cameraStatus: cameraAssignmentStatus, // Nuevo campo para trackear estado de cámaras
       ...(isEditing && { updatedAt: new Date().toISOString() }),
-      ...(!isEditing && { createdAt: new Date().toISOString() })
+      ...(!isEditing && { createdAt: new Date().toISOString() }),
     };
 
-    console.log("📦 Datos del torneo a ", isEditing ? "actualizar" : "guardar", ":", tournamentData);
+    console.log("📦 Datos del torneo a guardar:", tournamentData);
 
     try {
       console.log("🚀 Llamando a onSave...");
       const result = await onSave(tournamentData);
-      console.log("✅ Torneo ", isEditing ? "actualizado" : "guardado", " exitosamente. Resultado:", result);
+      console.log("✅ Torneo guardado exitosamente. Resultado:", result);
 
       setShowForm(false);
-      // Solo resetear el form si no estamos editando
       if (!isEditing) {
         setFormData({
           name: "",
@@ -197,11 +314,17 @@ const TournamentForm = ({ onSave, onCancel, workers, cameras, tournament = null,
           status: "pendiente",
           workerId: "",
           selectedHoles: [],
+          assignedCameras: [],
         });
+        setCameraAssignmentStatus("pending");
       }
     } catch (error) {
-      console.error("❌ Error ", isEditing ? "actualizando" : "guardando", " torneo:", error);
-      alert(`Error al ${isEditing ? 'actualizar' : 'guardar'} el torneo. Por favor intenta nuevamente.`);
+      console.error("❌ Error guardando torneo:", error);
+      alert(
+        `Error al ${
+          isEditing ? "actualizar" : "guardar"
+        } el torneo. Por favor intenta nuevamente.`
+      );
     }
   };
 
@@ -228,12 +351,48 @@ const TournamentForm = ({ onSave, onCancel, workers, cameras, tournament = null,
     return null;
   }
 
+  // Función para obtener el mensaje de estado de cámaras
+  const getCameraStatusMessage = () => {
+    switch (cameraAssignmentStatus) {
+      case "complete":
+        return {
+          message: "✅ Cámaras asignadas correctamente",
+          color: "text-emerald-400",
+          bgColor: "bg-emerald-500/20",
+          borderColor: "border-emerald-500/30",
+        };
+      case "insufficient":
+        return {
+          message: `⚠️ El trabajador tiene ${availableCameras.length} cámaras, pero se necesitan ${requiredCameras}`,
+          color: "text-yellow-400",
+          bgColor: "bg-yellow-500/20",
+          borderColor: "border-yellow-500/30",
+        };
+      case "none":
+        return {
+          message: "❌ El trabajador no tiene cámaras asignadas",
+          color: "text-red-400",
+          bgColor: "bg-red-500/20",
+          borderColor: "border-red-500/30",
+        };
+      default:
+        return {
+          message: "⏳ Selecciona un trabajador para asignar cámaras",
+          color: "text-gray-400",
+          bgColor: "bg-gray-500/20",
+          borderColor: "border-gray-500/30",
+        };
+    }
+  };
+
+  const cameraStatus = getCameraStatusMessage();
+
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <div className="bg-slate-800/90 backdrop-blur-xl rounded-2xl border border-white/10 p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-semibold text-white">
-            {isEditing ? 'Editar Torneo' : 'Nuevo Torneo'}
+            {isEditing ? "Editar Torneo" : "Nuevo Torneo"}
           </h3>
           <button
             onClick={handleCancel}
@@ -374,7 +533,7 @@ const TournamentForm = ({ onSave, onCancel, workers, cameras, tournament = null,
               Hoyos Asegurados * (2 cámaras por hoyo)
             </label>
             <div className="grid grid-cols-6 md:grid-cols-9 lg:grid-cols-18 gap-2">
-              {Array.from({ length: 10 }, (_, i) => i + 1).map((hole) => (
+              {Array.from({ length: 18 }, (_, i) => i + 1).map((hole) => (
                 <button
                   key={hole}
                   type="button"
@@ -407,7 +566,10 @@ const TournamentForm = ({ onSave, onCancel, workers, cameras, tournament = null,
             </label>
             <select
               value={formData.workerId}
-              onChange={(e) => handleInputChange("workerId", e.target.value)}
+              onChange={(e) => {
+                console.log("🔄 Seleccionando trabajador, ID:", e.target.value);
+                handleInputChange("workerId", e.target.value);
+              }}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
             >
               <option className="text-white bg-gray-700" value="">
@@ -420,6 +582,9 @@ const TournamentForm = ({ onSave, onCancel, workers, cameras, tournament = null,
                   value={worker.id}
                 >
                   {worker.name} - {worker.phone}
+                  {worker.camerasAssigned &&
+                    worker.camerasAssigned.length > 0 &&
+                    ` (${worker.camerasAssigned.length} cámaras)`}
                 </option>
               ))}
             </select>
@@ -429,6 +594,128 @@ const TournamentForm = ({ onSave, onCancel, workers, cameras, tournament = null,
               </p>
             )}
           </div>
+
+          {/* Asignación de Cámaras */}
+          {formData.workerId && (
+            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+              <h4 className="font-semibold text-white mb-3 flex items-center space-x-2">
+                <Camera className="w-4 h-4" />
+                <span>Asignación de Cámaras</span>
+              </h4>
+
+              {/* Estado de asignación */}
+              <div
+                className={`p-3 rounded-lg border ${cameraStatus.bgColor} ${cameraStatus.borderColor} ${cameraStatus.color} mb-4`}
+              >
+                <div className="flex items-center space-x-2">
+                  {cameraAssignmentStatus === "complete" && (
+                    <CheckCircle className="w-4 h-4" />
+                  )}
+                  {cameraAssignmentStatus === "insufficient" && (
+                    <AlertCircle className="w-4 h-4" />
+                  )}
+                  {cameraAssignmentStatus === "none" && (
+                    <Package className="w-4 h-4" />
+                  )}
+                  <span className="text-sm font-medium">
+                    {cameraStatus.message}
+                  </span>
+                </div>
+              </div>
+
+              {/* Cámaras asignadas del trabajador */}
+              {availableCameras.length > 0 && (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    Cámaras del trabajador ({availableCameras.length}{" "}
+                    disponibles)
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-32 overflow-y-auto">
+                    {availableCameras.map((camera) => (
+                      <label
+                        key={camera.id}
+                        className={`flex items-center space-x-3 p-3 rounded border transition-colors cursor-pointer ${
+                          formData.assignedCameras.includes(camera.id)
+                            ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-400"
+                            : "bg-white/5 border-white/10 text-gray-300 hover:border-emerald-500/30"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={formData.assignedCameras.includes(camera.id)}
+                          onChange={() => handleCameraSelection(camera.id)}
+                          className="rounded border-white/20 bg-white/5"
+                        />
+                        <div className="flex-1">
+                          <div className="text-sm font-medium">{camera.id}</div>
+                          <div className="text-xs text-gray-400">
+                            {camera.model}
+                          </div>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Cámaras adicionales del almacén */}
+              {availableWarehouseCameras.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    Cámaras adicionales del almacén (
+                    {availableWarehouseCameras.length} disponibles)
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-32 overflow-y-auto">
+                    {availableWarehouseCameras.map((camera) => (
+                      <label
+                        key={camera.id}
+                        className={`flex items-center space-x-3 p-3 rounded border transition-colors cursor-pointer ${
+                          formData.assignedCameras.includes(camera.id)
+                            ? "bg-blue-500/20 border-blue-500/50 text-blue-400"
+                            : "bg-white/5 border-white/10 text-gray-300 hover:border-blue-500/30"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={formData.assignedCameras.includes(camera.id)}
+                          onChange={() => handleCameraSelection(camera.id)}
+                          className="rounded border-white/20 bg-white/5"
+                        />
+                        <div className="flex-1">
+                          <div className="text-sm font-medium">{camera.id}</div>
+                          <div className="text-xs text-gray-400">
+                            {camera.model}
+                          </div>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Resumen de asignación */}
+              <div className="mt-4 p-3 bg-white/5 rounded-lg">
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="text-gray-400">Cámaras requeridas:</span>
+                    <span className="text-white ml-2">{requiredCameras}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400">Cámaras asignadas:</span>
+                    <span
+                      className={`ml-2 ${
+                        formData.assignedCameras.length >= requiredCameras
+                          ? "text-emerald-400"
+                          : "text-yellow-400"
+                      }`}
+                    >
+                      {formData.assignedCameras.length}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Resumen y Botones */}
           <div className="bg-white/5 rounded-lg p-4">
@@ -441,11 +728,25 @@ const TournamentForm = ({ onSave, onCancel, workers, cameras, tournament = null,
                 <span className="text-white ml-2">{requiredCameras}</span>
               </div>
               <div>
+                <span className="text-gray-400">Cámaras asignadas:</span>
+                <span
+                  className={`ml-2 ${
+                    formData.assignedCameras.length >= requiredCameras
+                      ? "text-emerald-400"
+                      : formData.assignedCameras.length > 0
+                      ? "text-yellow-400"
+                      : "text-red-400"
+                  }`}
+                >
+                  {formData.assignedCameras.length}
+                </span>
+              </div>
+              <div>
                 <span className="text-gray-400">Estado:</span>
                 <span
                   className={`ml-2 ${
                     formData.status === "activo"
-                      ? "text-green-400"
+                      ? "text-emerald-400"
                       : formData.status === "pendiente"
                       ? "text-yellow-400"
                       : "text-blue-400"
@@ -463,6 +764,15 @@ const TournamentForm = ({ onSave, onCancel, workers, cameras, tournament = null,
               <div>
                 <span className="text-gray-400">Duración:</span>
                 <span className="text-white ml-2">{formData.days} día(s)</span>
+              </div>
+              <div>
+                <span className="text-gray-400">Trabajador:</span>
+                <span className="text-white ml-2">
+                  {formData.workerId
+                    ? workers.find((w) => w.id.toString() === formData.workerId)
+                        ?.name || "No encontrado"
+                    : "No asignado"}
+                </span>
               </div>
               {formData.startDate && formData.endDate && (
                 <>
@@ -495,7 +805,7 @@ const TournamentForm = ({ onSave, onCancel, workers, cameras, tournament = null,
               className="bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition-colors flex items-center space-x-2"
             >
               <Save className="w-5 h-5" />
-              <span>{isEditing ? 'Actualizar Torneo' : 'Crear Torneo'}</span>
+              <span>{isEditing ? "Actualizar Torneo" : "Crear Torneo"}</span>
             </button>
             <button
               type="button"

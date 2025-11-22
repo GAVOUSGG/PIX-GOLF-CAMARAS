@@ -18,6 +18,9 @@ const stateCoordinates = {
   'Chiapas': [16.7569, -93.1292],
   'Oaxaca': [17.0732, -96.7266],
   'Michoacán': [19.5665, -101.7068],
+  'Nayarit': [21.7514, -104.8455],
+  'Zacatecas': [22.7709, -102.5832],
+  'Hidalgo': [20.0911, -98.7620],
   'Guanajuato': [21.0190, -101.2574],
   'Sonora': [29.2972, -110.3309],
   'Chihuahua': [28.6330, -106.0691],
@@ -43,7 +46,7 @@ const MexicoMap = ({ tournaments, workers, cameras }) => {
   };
 
   const getMarkerColor = (stateData) => {
-    if (stateData.activeTournaments > 0) return 'bg-red-500';
+    if (stateData.activeTournaments > 0) return 'bg-green-600';
     if (stateData.tournaments.length > 0) return 'bg-yellow-500';
     if (stateData.workers.length > 0) return 'bg-blue-500';
     return 'bg-gray-500';
@@ -52,10 +55,10 @@ const MexicoMap = ({ tournaments, workers, cameras }) => {
   return (
     <div className="bg-black/20 backdrop-blur-lg rounded-2xl border border-white/10 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-semibold text-white">Mapa de Operaciones - México</h3>
+        <h3 className="text-xl font-semibold text-white">Mapa de Operaciones</h3>
         <div className="flex items-center space-x-4 text-sm text-gray-400">
           <div className="flex items-center space-x-1">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-green-600 rounded-full"></div>
             <span>Torneos Activos</span>
           </div>
           <div className="flex items-center space-x-1">

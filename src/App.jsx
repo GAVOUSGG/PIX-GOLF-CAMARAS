@@ -89,6 +89,7 @@ function App() {
         return (
           <Workers
             workersData={workersData}
+            camerasData={camerasData}
             onCreateWorker={createWorker}
             onUpdateWorker={updateWorker}
             onDeleteWorker={deleteWorker}
