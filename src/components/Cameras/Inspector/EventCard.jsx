@@ -1,34 +1,56 @@
 import React from "react";
-import { Package, MapPin, Trophy, Truck, AlertCircle } from "lucide-react";
+import {
+  Package,
+  MapPin,
+  Trophy,
+  Truck,
+  Settings,
+  ArrowRight,
+} from "lucide-react";
 
 const EventCard = ({ event, onClick }) => {
   const getTypeIcon = (type) => {
     switch (type) {
       case "shipment":
-        return <Truck className="w-5 h-5" />;
+        return <Truck className="w-4 h-4" />;
       case "tournament":
-        return <Trophy className="w-5 h-5" />;
+        return <Trophy className="w-4 h-4" />;
       case "return":
-        return <MapPin className="w-5 h-5" />;
+        return <MapPin className="w-4 h-4" />;
       case "maintenance":
-        return <AlertCircle className="w-5 h-5" />;
+        return <Settings className="w-4 h-4" />;
       default:
-        return <Package className="w-5 h-5" />;
+        return <Package className="w-4 h-4" />;
     }
   };
 
   const getTypeColor = (type) => {
     switch (type) {
       case "shipment":
-        return "bg-blue-500/20 border-blue-500/30 text-blue-400";
+        return "bg-blue-500/20 border-blue-500/30 hover:border-blue-400/50";
       case "tournament":
-        return "bg-purple-500/20 border-purple-500/30 text-purple-400";
+        return "bg-purple-500/20 border-purple-500/30 hover:border-purple-400/50";
       case "return":
-        return "bg-orange-500/20 border-orange-500/30 text-orange-400";
+        return "bg-orange-500/20 border-orange-500/30 hover:border-orange-400/50";
       case "maintenance":
-        return "bg-gray-500/20 border-gray-500/30 text-gray-400";
+        return "bg-gray-500/20 border-gray-500/30 hover:border-gray-400/50";
       default:
-        return "bg-white/5 border-white/10 text-gray-400";
+        return "bg-white/5 border-white/10 hover:border-white/20";
+    }
+  };
+
+  const getTypeTextColor = (type) => {
+    switch (type) {
+      case "shipment":
+        return "text-blue-400";
+      case "tournament":
+        return "text-purple-400";
+      case "return":
+        return "text-orange-400";
+      case "maintenance":
+        return "text-gray-400";
+      default:
+        return "text-gray-400";
     }
   };
 
@@ -50,21 +72,42 @@ const EventCard = ({ event, onClick }) => {
     <button
       onClick={onClick}
       className={`
-        w-72 p-4 rounded-xl border cursor-pointer
-        transition-all hover:scale-105 hover:shadow-lg
+        w-72 p-4 rounded-xl border text-left
+        transition-all duration-300 hover:scale-105 hover:shadow-xl
+        backdrop-blur-sm group
         ${getTypeColor(event.type)}
       `}
     >
-      <div className="flex items-start gap-3">
-        <div className="flex-shrink-0 mt-1">{getTypeIcon(event.type)}</div>
-        <div className="flex-1 text-left">
-          <h3 className="font-semibold text-white mb-1 line-clamp-2">
-            {event.title}
-          </h3>
-          <p className="text-xs opacity-75 mb-2">{formatDate(event.date)}</p>
-          <div className="inline-block px-2 py-1 bg-white/10 rounded text-xs">
-            {event.type}
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <div
+            className={`p-2 rounded-lg bg-white/5 ${getTypeTextColor(
+              event.type
+            )}`}
+          >
+            {getTypeIcon(event.type)}
           </div>
+          <span
+            className={`text-xs font-semibold uppercase tracking-wide ${getTypeTextColor(
+              event.type
+            )}`}
+          >
+            {event.type}
+          </span>
+        </div>
+        <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
+      </div>
+
+      <h3 className="font-semibold text-white mb-2 line-clamp-2 group-hover:text-emerald-50 transition-colors">
+        {event.title}
+      </h3>
+
+      <div className="flex items-center justify-between">
+        <p className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors">
+          {formatDate(event.date)}
+        </p>
+        <div className="text-xs bg-white/10 text-gray-400 px-2 py-1 rounded group-hover:bg-white/20 transition-colors">
+          Ver detalles
         </div>
       </div>
     </button>

@@ -388,9 +388,7 @@
       "email": "correo@gmail.com",
       "status": "disponible",
       "specialty": "Instalación cámaras solares",
-      "camerasAssigned": [
-        "prueba"
-      ],
+      "camerasAssigned": [],
       "photo": "",
       "updatedAt": "2025-11-22T21:35:32.657Z"
     },
@@ -474,7 +472,9 @@
       "email": "correo@gmail.com",
       "status": "disponible",
       "specialty": "Instalación cámaras solares",
-      "camerasAssigned": [],
+      "camerasAssigned": [
+        "prueba"
+      ],
       "photo": "",
       "createdAt": "2025-11-25T04:03:48.503Z"
     }
@@ -485,10 +485,10 @@
       "model": "Hikvision DS-2XS6A25G0-I/CH20S40",
       "type": "Solar",
       "status": "disponible",
-      "location": "Puebla",
+      "location": "Estado de México",
       "serialNumber": "asda",
       "simNumber": "354621345645",
-      "assignedTo": "Oscar Uriel Perez",
+      "assignedTo": "Alanna Sanchez Granados",
       "assignedWorkerId": "11",
       "notes": "",
       "historyCount": 0,
@@ -496,7 +496,7 @@
       "lastWorkerId": "",
       "lastTournamentId": "",
       "createdAt": "2025-11-23T00:48:46.469Z",
-      "updatedAt": "2025-11-27T03:00:51.334Z"
+      "updatedAt": "2025-11-27T03:08:37.343Z"
     }
   ],
   "cameraHistory": [
@@ -541,6 +541,34 @@
       },
       "date": "2025-11-27T03:00:51.301Z",
       "createdAt": "2025-11-27T03:00:51.301Z"
+    },
+    {
+      "id": "prueba-1764212845272",
+      "cameraId": "prueba",
+      "type": "shipment",
+      "title": "Enviado a Estado de México",
+      "details": {
+        "shipmentId": "ENV-002",
+        "destination": "Estado de México",
+        "recipient": "Alanna Sanchez Granados",
+        "trackingNumber": "TRK1764212819047"
+      },
+      "date": "2025-11-27T03:07:25.272Z",
+      "createdAt": "2025-11-27T03:07:25.272Z"
+    },
+    {
+      "id": "prueba-1764212917323",
+      "cameraId": "prueba",
+      "type": "return",
+      "title": "Entregado a Alanna Sanchez Granados en Estado de México",
+      "details": {
+        "shipmentId": "ENV-002",
+        "destination": "Estado de México",
+        "recipient": "Alanna Sanchez Granados",
+        "status": "entregado"
+      },
+      "date": "2025-11-27T03:08:37.323Z",
+      "createdAt": "2025-11-27T03:08:37.323Z"
     }
   ],
   "shipments": [
@@ -559,6 +587,22 @@
       "extraItems": "",
       "createdAt": "2025-11-27T03:00:32.262Z",
       "updatedAt": "2025-11-27T03:00:51.298Z"
+    },
+    {
+      "id": "ENV-002",
+      "cameras": [
+        "prueba"
+      ],
+      "destination": "Estado de México",
+      "recipient": "Alanna Sanchez Granados",
+      "sender": "",
+      "shipper": "Oscar Uriel Perez",
+      "date": "2025-11-28",
+      "status": "entregado",
+      "trackingNumber": "TRK1764212819047",
+      "extraItems": "",
+      "createdAt": "2025-11-27T03:07:25.261Z",
+      "updatedAt": "2025-11-27T03:08:37.321Z"
     }
   ]
 }

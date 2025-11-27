@@ -1,5 +1,5 @@
 import React from "react";
-import { X } from "lucide-react";
+import { X, Calendar, Clock, MapPin, User, Package } from "lucide-react";
 
 const EventModal = ({ event, onClose }) => {
   const formatDate = (dateString) => {
@@ -10,7 +10,6 @@ const EventModal = ({ event, onClose }) => {
         day: "numeric",
         hour: "2-digit",
         minute: "2-digit",
-        second: "2-digit",
       });
     } catch {
       return dateString;
@@ -30,76 +29,97 @@ const EventModal = ({ event, onClose }) => {
   const getTypeColor = (type) => {
     switch (type) {
       case "shipment":
-        return "text-blue-400";
+        return "border-l-blue-500";
       case "tournament":
-        return "text-purple-400";
+        return "border-l-purple-500";
       case "return":
-        return "text-orange-400";
+        return "border-l-orange-500";
       case "maintenance":
-        return "text-gray-400";
+        return "border-l-gray-500";
       default:
-        return "text-white";
+        return "border-l-white";
     }
   };
 
+  const renderDetailItem = (icon, label, value) => (
+    <div className="flex items-start gap-3 py-3 border-b border-white/10 last:border-b-0">
+      <div className="flex-shrink-0 mt-0.5 text-gray-400">{icon}</div>
+      <div className="flex-1 min-w-0">
+        <div className="text-sm font-medium text-gray-400 mb-1">{label}</div>
+        <div className="text-white text-sm">{value || "No especificado"}</div>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-slate-800/90 backdrop-blur-xl rounded-2xl border border-white/10 p-8 max-w-2xl w-full max-h-96 overflow-y-auto">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div
+        className={`bg-slate-800/95 backdrop-blur-xl rounded-2xl border border-white/10 w-full max-w-2xl max-h-[85vh] overflow-hidden border-l-4 ${getTypeColor(
+          event.type
+        )}`}
+      >
         {/* Header */}
-        <div className="flex items-start justify-between mb-6">
-          <div>
-            <h2 className="text-2xl font-bold text-white mb-2">{event.title}</h2>
-            <p className={`text-sm ${getTypeColor(event.type)} font-semibold`}>
-              {getTypeLabel(event.type)}
-            </p>
+        <div className="flex items-start justify-between p-6 border-b border-white/10">
+          <div className="flex-1 min-w-0">
+            <h2 className="text-xl font-bold text-white mb-2 pr-8">
+              {event.title}
+            </h2>
+            <div className="flex items-center gap-4 flex-wrap">
+              <span className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-sm text-gray-300">
+                <Package className="w-3 h-3" />
+                {getTypeLabel(event.type)}
+              </span>
+              <span className="inline-flex items-center gap-2 text-sm text-gray-400">
+                <Calendar className="w-3 h-3" />
+                {formatDate(event.date)}
+              </span>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="flex-shrink-0 text-gray-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10 ml-4"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="space-y-6">
-          {/* Date */}
-          <div>
-            <h3 className="text-sm font-semibold text-gray-400 mb-2">Fecha y Hora</h3>
-            <p className="text-white">{formatDate(event.date)}</p>
-          </div>
-
-          {/* Details */}
-          {event.details && Object.keys(event.details).length > 0 && (
-            <div>
-              <h3 className="text-sm font-semibold text-gray-400 mb-3">Detalles</h3>
-              <div className="space-y-2">
-                {Object.entries(event.details).map(([key, value]) => (
-                  <div key={key} className="flex justify-between items-start">
-                    <span className="text-gray-400 capitalize">{key}:</span>
-                    <span className="text-white font-medium text-right max-w-xs break-words">
-                      {typeof value === "object" ? JSON.stringify(value) : String(value)}
-                    </span>
-                  </div>
-                ))}
-              </div>
+        <div className="p-6 overflow-y-auto max-h-96">
+          {event.details && Object.keys(event.details).length > 0 ? (
+            <div className="space-y-1">
+              {Object.entries(event.details).map(([key, value]) =>
+                renderDetailItem(
+                  <Clock className="w-4 h-4" />,
+                  key
+                    .replace(/([A-Z])/g, " $1")
+                    .replace(/^./, (str) => str.toUpperCase()),
+                  typeof value === "object"
+                    ? JSON.stringify(value, null, 2)
+                    : String(value)
+                )
+              )}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-400">
+              <Package className="w-12 h-12 mx-auto mb-3 opacity-50" />
+              <p>No hay detalles adicionales disponibles</p>
             </div>
           )}
-
-          {/* Event ID */}
-          <div className="pt-4 border-t border-white/10">
-            <p className="text-xs text-gray-500">ID: {event.id}</p>
-          </div>
         </div>
 
-        {/* Footer Button */}
-        <div className="mt-6 pt-4 border-t border-white/10">
-          <button
-            onClick={onClose}
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-lg transition-colors"
-          >
-            Cerrar
-          </button>
+        {/* Footer */}
+        <div className="p-4 border-t border-white/10 bg-black/20">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-gray-500 font-mono">
+              ID: {event.id}
+            </span>
+            <button
+              onClick={onClose}
+              className="bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30 px-4 py-2 rounded-lg transition-colors text-sm font-medium"
+            >
+              Cerrar
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import EventCard from "./EventCard";
 
 const Timeline = ({ events, onEventClick, zoomLevel }) => {
@@ -29,20 +29,39 @@ const Timeline = ({ events, onEventClick, zoomLevel }) => {
 
   if (events.length === 0) {
     return (
-      <div className="bg-black/20 rounded-2xl border border-white/10 p-8 lg:col-span-3">
+      <div className="bg-black/20 backdrop-blur-sm rounded-2xl border border-white/10 p-8">
         <div className="text-center text-gray-400">
-          <p className="text-lg">No hay eventos en el historial de esta cámara</p>
+          <Calendar className="w-12 h-12 mx-auto mb-3 opacity-50" />
+          <p className="text-lg">No hay eventos en el historial</p>
+          <p className="text-sm mt-1">
+            Los eventos aparecerán aquí cuando la cámara sea utilizada
+          </p>
         </div>
       </div>
     );
   }
 
+  const eventStats = {
+    total: events.length,
+    shipments: events.filter((e) => e.type === "shipment").length,
+    tournaments: events.filter((e) => e.type === "tournament").length,
+    returns: events.filter((e) => e.type === "return").length,
+    maintenance: events.filter((e) => e.type === "maintenance").length,
+  };
+
   return (
-    <div className="bg-black/20 rounded-2xl border border-white/10 p-6">
-      {/* Timeline Header */}
+    <div className="bg-black/20 backdrop-blur-sm rounded-2xl border border-white/10 p-6">
+      {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-white">Historial de Eventos</h2>
-        <div className="text-sm text-gray-400">{events.length} eventos</div>
+        <div>
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-emerald-400" />
+            Línea de Tiempo
+          </h2>
+          <p className="text-gray-400 text-sm mt-1">
+            {events.length} eventos registrados
+          </p>
+        </div>
       </div>
 
       {/* Timeline Container */}
@@ -51,8 +70,8 @@ const Timeline = ({ events, onEventClick, zoomLevel }) => {
         {canScrollLeft && (
           <button
             onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-emerald-500 hover:bg-emerald-600 text-white p-2 rounded-full shadow-lg transition-all"
-            title="Scroll izquierda"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30 p-2 rounded-full shadow-lg transition-all backdrop-blur-sm"
+            title="Anterior"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
@@ -61,49 +80,67 @@ const Timeline = ({ events, onEventClick, zoomLevel }) => {
         {canScrollRight && (
           <button
             onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-emerald-500 hover:bg-emerald-600 text-white p-2 rounded-full shadow-lg transition-all"
-            title="Scroll derecha"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30 p-2 rounded-full shadow-lg transition-all backdrop-blur-sm"
+            title="Siguiente"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
         )}
 
-        {/* Scrollable Timeline */}
+        {/* Events Container */}
         <div
           ref={scrollContainerRef}
           onScroll={handleScroll}
-          className="flex gap-4 overflow-x-auto pb-4 px-2 scroll-smooth"
+          className="flex gap-4 overflow-x-auto pb-6 px-2 scroll-smooth scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent"
           style={{ scrollBehavior: "smooth" }}
         >
-          {events.map((event) => (
+          {events.map((event, index) => (
             <div
               key={event.id}
-              style={{ transform: `scale(${zoomLevel})`, transformOrigin: "left center" }}
-              className="flex-shrink-0"
+              style={{
+                transform: `scale(${zoomLevel})`,
+                transformOrigin: "left center",
+              }}
+              className="flex-shrink-0 relative"
             >
+              <div className="absolute -top-2 -right-2 w-6 h-6 bg-slate-700 border border-white/10 rounded-full flex items-center justify-center text-xs font-bold text-white">
+                {events.length - index}
+              </div>
               <EventCard event={event} onClick={() => onEventClick(event)} />
             </div>
           ))}
         </div>
       </div>
 
-      {/* Timeline Stats */}
-      <div className="mt-6 grid grid-cols-3 gap-4 pt-6 border-t border-white/10">
-        <div className="text-center">
-          <div className="text-2xl font-bold text-emerald-400">{events.length}</div>
-          <div className="text-xs text-gray-400">Total eventos</div>
+      {/* Statistics */}
+      <div className="mt-6 grid grid-cols-5 gap-3 pt-6 border-t border-white/10">
+        <div className="text-center p-3 bg-white/5 rounded-lg">
+          <div className="text-lg font-bold text-white">{eventStats.total}</div>
+          <div className="text-xs text-gray-400">Total</div>
         </div>
-        <div className="text-center">
-          <div className="text-2xl font-bold text-blue-400">
-            {events.filter((e) => e.type === "shipment").length}
+        <div className="text-center p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+          <div className="text-lg font-bold text-blue-400">
+            {eventStats.shipments}
           </div>
-          <div className="text-xs text-gray-400">Envíos</div>
+          <div className="text-xs text-blue-400">Envíos</div>
         </div>
-        <div className="text-center">
-          <div className="text-2xl font-bold text-purple-400">
-            {events.filter((e) => e.type === "tournament").length}
+        <div className="text-center p-3 bg-purple-500/10 rounded-lg border border-purple-500/20">
+          <div className="text-lg font-bold text-purple-400">
+            {eventStats.tournaments}
           </div>
-          <div className="text-xs text-gray-400">Torneos</div>
+          <div className="text-xs text-purple-400">Torneos</div>
+        </div>
+        <div className="text-center p-3 bg-orange-500/10 rounded-lg border border-orange-500/20">
+          <div className="text-lg font-bold text-orange-400">
+            {eventStats.returns}
+          </div>
+          <div className="text-xs text-orange-400">Devoluciones</div>
+        </div>
+        <div className="text-center p-3 bg-gray-500/10 rounded-lg border border-gray-500/20">
+          <div className="text-lg font-bold text-gray-400">
+            {eventStats.maintenance}
+          </div>
+          <div className="text-xs text-gray-400">Mantenimiento</div>
         </div>
       </div>
     </div>
