@@ -248,7 +248,7 @@
       "state": "CDMX",
       "date": "2025-11-25",
       "endDate": "2025-11-29",
-      "status": "pendiente",
+      "status": "activo",
       "worker": "Larissa Granados",
       "workerId": "11",
       "cameras": [
@@ -261,7 +261,7 @@
       "field": "Club de Golf México",
       "cameraStatus": "insufficient",
       "createdAt": "2025-11-23T00:37:19.019Z",
-      "updatedAt": "2025-11-27T02:54:41.750Z"
+      "updatedAt": "2025-11-27T15:05:32.601Z"
     },
     {
       "id": "7917",
@@ -292,7 +292,7 @@
       "state": "Zacatecas",
       "date": "2025-11-27",
       "endDate": "2025-11-29",
-      "status": "pendiente",
+      "status": "activo",
       "worker": "Por asignar",
       "workerId": "",
       "cameras": [],
@@ -304,7 +304,50 @@
       "field": "Club de golf Zacatecas",
       "cameraStatus": "pending",
       "createdAt": "2025-11-25T04:17:31.912Z",
-      "updatedAt": "2025-11-25T04:20:26.381Z"
+      "updatedAt": "2025-11-27T15:05:40.870Z"
+    },
+    {
+      "id": "e08b",
+      "name": "el cielo",
+      "location": "El Cielo, Tlajomulco",
+      "state": "Jalisco",
+      "date": "2025-11-30",
+      "endDate": "2025-11-30",
+      "status": "pendiente",
+      "worker": "Ernesto De Keratry",
+      "workerId": "1",
+      "cameras": [
+        "Prueba2"
+      ],
+      "holes": [
+        8
+      ],
+      "days": 1,
+      "field": "El Cielo",
+      "cameraStatus": "insufficient",
+      "createdAt": "2025-11-27T15:15:43.912Z",
+      "updatedAt": "2025-11-27T15:16:12.095Z"
+    },
+    {
+      "id": "0825",
+      "name": "Atlas CC",
+      "location": "Atlas CC, Tlajomulco",
+      "state": "Jalisco",
+      "date": "2025-11-30",
+      "endDate": "2025-11-30",
+      "status": "pendiente",
+      "worker": "Gabriel Camberos Trinidad",
+      "workerId": "3",
+      "cameras": [
+        "PRUEBA3"
+      ],
+      "holes": [
+        14
+      ],
+      "days": 1,
+      "field": "Atlas CC",
+      "cameraStatus": "insufficient",
+      "createdAt": "2025-11-27T15:24:53.139Z"
     }
   ],
   "workers": [
@@ -317,7 +360,7 @@
       "status": "disponible",
       "specialty": "Mantenimiento equipos",
       "camerasAssigned": [
-        "prueba"
+        "Prueba2"
       ],
       "photo": "",
       "updatedAt": "2025-11-23T00:48:54.457Z"
@@ -342,7 +385,9 @@
       "email": "gavo.ct@gmail.com",
       "status": "disponible",
       "specialty": "Soporte técnico",
-      "camerasAssigned": [],
+      "camerasAssigned": [
+        "PRUEBA3"
+      ],
       "photo": "",
       "updatedAt": "2025-11-13T04:14:40.271Z"
     },
@@ -496,7 +541,45 @@
       "lastWorkerId": "",
       "lastTournamentId": "",
       "createdAt": "2025-11-23T00:48:46.469Z",
-      "updatedAt": "2025-11-27T03:26:04.242Z"
+      "updatedAt": "2025-11-27T15:14:39.659Z"
+    },
+    {
+      "id": "Prueba2",
+      "model": "Hikvision DS-2XS6A25G0-I/CH20S40",
+      "type": "Solar",
+      "status": "disponible",
+      "location": "Jalisco",
+      "serialNumber": "asdasd",
+      "simNumber": "32233120.",
+      "assignedTo": "Ernesto De Keratry",
+      "notes": "",
+      "createdAt": "2025-11-27T03:29:44.897Z",
+      "updatedAt": "2025-11-27T15:14:41.271Z"
+    },
+    {
+      "id": "PRUEBA3",
+      "model": "Hikvision DS-2XS6A25G0-I/CH20S40",
+      "type": "Solar",
+      "status": "disponible",
+      "location": "Jalisco",
+      "serialNumber": "asdasdsa",
+      "simNumber": "32465145613",
+      "assignedTo": "Gabriel Camberos Trinidad",
+      "notes": "",
+      "createdAt": "2025-11-27T15:21:19.203Z",
+      "updatedAt": "2025-11-27T15:22:37.300Z"
+    },
+    {
+      "id": "PRUEBA 4",
+      "model": "Hikvision DS-2XS6A25G0-I/CH20S40",
+      "type": "Solar",
+      "status": "disponible",
+      "location": "Jalisco",
+      "serialNumber": "ASDASD",
+      "simNumber": "98451204",
+      "assignedTo": "Gabriel Camberos Trinidad",
+      "notes": "",
+      "createdAt": "2025-11-27T15:25:48.972Z"
     }
   ],
   "cameraHistory": [
@@ -597,6 +680,216 @@
       },
       "date": "2025-11-27T03:26:04.108Z",
       "createdAt": "2025-11-27T03:26:04.108Z"
+    },
+    {
+      "id": "prueba-1764214460207",
+      "cameraId": "prueba",
+      "type": "shipment",
+      "title": "Enviado a Durango",
+      "details": {
+        "shipmentId": "ENV-004",
+        "destination": "Durango",
+        "recipient": "Edgar Alfredo Sánchez Rodríguez",
+        "trackingNumber": "TRK1764214421030"
+      },
+      "date": "2025-11-27T03:34:20.207Z",
+      "createdAt": "2025-11-27T03:34:20.207Z"
+    },
+    {
+      "id": "Prueba2-1764214460348",
+      "cameraId": "Prueba2",
+      "type": "shipment",
+      "title": "Enviado a Durango",
+      "details": {
+        "shipmentId": "ENV-004",
+        "destination": "Durango",
+        "recipient": "Edgar Alfredo Sánchez Rodríguez",
+        "trackingNumber": "TRK1764214421030"
+      },
+      "date": "2025-11-27T03:34:20.348Z",
+      "createdAt": "2025-11-27T03:34:20.348Z"
+    },
+    {
+      "id": "prueba-1764214484036",
+      "cameraId": "prueba",
+      "type": "shipment",
+      "title": "Enviado a Durango",
+      "details": {
+        "shipmentId": "ENV-004",
+        "destination": "Durango",
+        "recipient": "Edgar Alfredo Sánchez Rodríguez",
+        "status": "enviado"
+      },
+      "date": "2025-11-27T03:34:44.036Z",
+      "createdAt": "2025-11-27T03:34:44.036Z"
+    },
+    {
+      "id": "Prueba2-1764214484115",
+      "cameraId": "Prueba2",
+      "type": "shipment",
+      "title": "Enviado a Durango",
+      "details": {
+        "shipmentId": "ENV-004",
+        "destination": "Durango",
+        "recipient": "Edgar Alfredo Sánchez Rodríguez",
+        "status": "enviado"
+      },
+      "date": "2025-11-27T03:34:44.115Z",
+      "createdAt": "2025-11-27T03:34:44.115Z"
+    },
+    {
+      "id": "prueba-1764214507247",
+      "cameraId": "prueba",
+      "type": "return",
+      "title": "Entregado a Edgar Alfredo Sánchez Rodríguez en Durango",
+      "details": {
+        "shipmentId": "ENV-004",
+        "destination": "Durango",
+        "recipient": "Edgar Alfredo Sánchez Rodríguez",
+        "status": "entregado"
+      },
+      "date": "2025-11-27T03:35:07.247Z",
+      "createdAt": "2025-11-27T03:35:07.247Z"
+    },
+    {
+      "id": "Prueba2-1764214507273",
+      "cameraId": "Prueba2",
+      "type": "return",
+      "title": "Entregado a Edgar Alfredo Sánchez Rodríguez en Durango",
+      "details": {
+        "shipmentId": "ENV-004",
+        "destination": "Durango",
+        "recipient": "Edgar Alfredo Sánchez Rodríguez",
+        "status": "entregado"
+      },
+      "date": "2025-11-27T03:35:07.273Z",
+      "createdAt": "2025-11-27T03:35:07.273Z"
+    },
+    {
+      "id": "prueba-1764256436470",
+      "cameraId": "prueba",
+      "type": "shipment",
+      "title": "Enviado a Jalisco",
+      "details": {
+        "shipmentId": "ENV-005",
+        "destination": "Jalisco",
+        "recipient": "Ernesto De Keratry",
+        "trackingNumber": "TRK1764256417101"
+      },
+      "date": "2025-11-27T15:13:56.470Z",
+      "createdAt": "2025-11-27T15:13:56.470Z"
+    },
+    {
+      "id": "Prueba2-1764256436521",
+      "cameraId": "Prueba2",
+      "type": "shipment",
+      "title": "Enviado a Jalisco",
+      "details": {
+        "shipmentId": "ENV-005",
+        "destination": "Jalisco",
+        "recipient": "Ernesto De Keratry",
+        "trackingNumber": "TRK1764256417101"
+      },
+      "date": "2025-11-27T15:13:56.521Z",
+      "createdAt": "2025-11-27T15:13:56.521Z"
+    },
+    {
+      "id": "prueba-1764256458445",
+      "cameraId": "prueba",
+      "type": "shipment",
+      "title": "Enviado a Jalisco",
+      "details": {
+        "shipmentId": "ENV-005",
+        "destination": "Jalisco",
+        "recipient": "Ernesto De Keratry",
+        "status": "enviado"
+      },
+      "date": "2025-11-27T15:14:18.445Z",
+      "createdAt": "2025-11-27T15:14:18.445Z"
+    },
+    {
+      "id": "Prueba2-1764256458475",
+      "cameraId": "Prueba2",
+      "type": "shipment",
+      "title": "Enviado a Jalisco",
+      "details": {
+        "shipmentId": "ENV-005",
+        "destination": "Jalisco",
+        "recipient": "Ernesto De Keratry",
+        "status": "enviado"
+      },
+      "date": "2025-11-27T15:14:18.475Z",
+      "createdAt": "2025-11-27T15:14:18.475Z"
+    },
+    {
+      "id": "prueba-1764256479507",
+      "cameraId": "prueba",
+      "type": "return",
+      "title": "Entregado a Ernesto De Keratry en Jalisco",
+      "details": {
+        "shipmentId": "ENV-005",
+        "destination": "Jalisco",
+        "recipient": "Ernesto De Keratry",
+        "status": "entregado"
+      },
+      "date": "2025-11-27T15:14:39.507Z",
+      "createdAt": "2025-11-27T15:14:39.507Z"
+    },
+    {
+      "id": "Prueba2-1764256479657",
+      "cameraId": "Prueba2",
+      "type": "return",
+      "title": "Entregado a Ernesto De Keratry en Jalisco",
+      "details": {
+        "shipmentId": "ENV-005",
+        "destination": "Jalisco",
+        "recipient": "Ernesto De Keratry",
+        "status": "entregado"
+      },
+      "date": "2025-11-27T15:14:39.657Z",
+      "createdAt": "2025-11-27T15:14:39.657Z"
+    },
+    {
+      "id": "Prueba2-1764256572095",
+      "cameraId": "Prueba2",
+      "type": "tournament",
+      "title": "Asignado a torneo: el cielo",
+      "details": {
+        "tournamentId": "e08b",
+        "tournamentName": "el cielo",
+        "location": "El Cielo, Tlajomulco",
+        "date": "2025-11-30"
+      },
+      "date": "2025-11-27T15:16:12.095Z",
+      "createdAt": "2025-11-27T15:16:12.095Z"
+    },
+    {
+      "id": "PRUEBA3-1764256941623",
+      "cameraId": "PRUEBA3",
+      "type": "shipment",
+      "title": "Enviado a Jalisco",
+      "details": {
+        "shipmentId": "ENV-006",
+        "destination": "Jalisco",
+        "recipient": "Gabriel Camberos Trinidad",
+        "trackingNumber": "TRK1764256921877"
+      },
+      "date": "2025-11-27T15:22:21.623Z",
+      "createdAt": "2025-11-27T15:22:21.623Z"
+    },
+    {
+      "id": "PRUEBA3-1764256957227",
+      "cameraId": "PRUEBA3",
+      "type": "return",
+      "title": "Entregado a Gabriel Camberos Trinidad en Jalisco",
+      "details": {
+        "shipmentId": "ENV-006",
+        "destination": "Jalisco",
+        "recipient": "Gabriel Camberos Trinidad",
+        "status": "entregado"
+      },
+      "date": "2025-11-27T15:22:37.227Z",
+      "createdAt": "2025-11-27T15:22:37.227Z"
     }
   ],
   "shipments": [
@@ -647,6 +940,56 @@
       "extraItems": "",
       "createdAt": "2025-11-27T03:25:36.707Z",
       "updatedAt": "2025-11-27T03:26:04.104Z"
+    },
+    {
+      "id": "ENV-004",
+      "cameras": [
+        "prueba",
+        "Prueba2"
+      ],
+      "destination": "Durango",
+      "recipient": "Edgar Alfredo Sánchez Rodríguez",
+      "sender": "POTOSINOS",
+      "shipper": "Ernesto De Keratry",
+      "date": "2025-11-27",
+      "status": "entregado",
+      "trackingNumber": "TRK1764214421030",
+      "extraItems": "",
+      "createdAt": "2025-11-27T03:34:20.195Z",
+      "updatedAt": "2025-11-27T03:35:07.243Z"
+    },
+    {
+      "id": "ENV-005",
+      "cameras": [
+        "prueba",
+        "Prueba2"
+      ],
+      "destination": "Jalisco",
+      "recipient": "Ernesto De Keratry",
+      "sender": "",
+      "shipper": "Edgar Alfredo Sánchez Rodríguez",
+      "date": "2025-11-27",
+      "status": "entregado",
+      "trackingNumber": "TRK1764256417101",
+      "extraItems": "",
+      "createdAt": "2025-11-27T15:13:56.447Z",
+      "updatedAt": "2025-11-27T15:14:39.503Z"
+    },
+    {
+      "id": "ENV-006",
+      "cameras": [
+        "PRUEBA3"
+      ],
+      "destination": "Jalisco",
+      "recipient": "Gabriel Camberos Trinidad",
+      "sender": "",
+      "shipper": "Ernesto De Keratry",
+      "date": "2025-11-27",
+      "status": "entregado",
+      "trackingNumber": "TRK1764256921877",
+      "extraItems": "",
+      "createdAt": "2025-11-27T15:22:21.552Z",
+      "updatedAt": "2025-11-27T15:22:37.226Z"
     }
   ]
 }

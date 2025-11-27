@@ -90,19 +90,18 @@ const ShipmentForm = ({
 
   // Cámaras disponibles (que no estén en uso)
   const availableCameras = useMemo(() => {
+    // Si no hay remitente seleccionado, no mostrar ninguna cámara
+    // Esto previene que se muestre "todo el inventario" por defecto
+    if (!formData.shipper) return [];
+
     return cameras.filter((camera) => {
       const isAvailable =
         camera.status === "disponible" || formData.cameras.includes(camera.id);
 
       if (!isAvailable) return false;
 
-      // Si hay un remitente seleccionado, filtrar por asignación
-      if (formData.shipper) {
-        return camera.assignedTo === formData.shipper;
-      }
-
-      // Si no hay remitente, mostrar todas las disponibles
-      return true;
+      // Filtrar estrictamente por asignación al remitente
+      return camera.assignedTo === formData.shipper;
     });
   }, [cameras, formData.cameras, formData.shipper]);
 

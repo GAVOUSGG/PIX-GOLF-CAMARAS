@@ -325,7 +325,8 @@ export const useAppState = () => {
       }
 
       // Cámaras removidas: limpiar assignedTo
-      if (camerasRemoved.length > 0) {
+      // También protegemos este bloque con skipCameraUpdate para evitar bucles
+      if (!skipCameraUpdate && camerasRemoved.length > 0) {
         console.log(
           "🔄 [updateWorker] Limpiando assignedTo en cámaras removidas:",
           camerasRemoved
