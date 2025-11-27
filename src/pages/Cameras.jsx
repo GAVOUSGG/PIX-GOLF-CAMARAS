@@ -4,7 +4,7 @@ import CameraForm from '../components/Cameras/CameraForm';
 import CameraCard from '../components/Cameras/CameraCard';
 import { Search, Filter, Plus } from 'lucide-react';
 
-const Cameras = ({ camerasData, workersData, onCreateCamera, onUpdateCamera, onDeleteCamera }) => {
+const Cameras = ({ camerasData, workersData, onCreateCamera, onUpdateCamera, onDeleteCamera, onInspectCamera }) => {
   const [editingCamera, setEditingCamera] = useState(null);
   const [viewingCamera, setViewingCamera] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -277,6 +277,7 @@ const Cameras = ({ camerasData, workersData, onCreateCamera, onUpdateCamera, onD
         onEditCamera={handleEditCamera}
         onDeleteCamera={handleDeleteCamera}
         onViewCamera={handleViewCamera}
+        onInspectCamera={onInspectCamera}
       />
 
       {/* Estado cuando no hay resultados */}

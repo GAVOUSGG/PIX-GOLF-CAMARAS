@@ -18,6 +18,7 @@ const CamerasTable = ({
   onEditCamera,
   onDeleteCamera,
   onViewCamera,
+  onInspectCamera,
 }) => {
   const [actionMenu, setActionMenu] = useState(null);
 
@@ -274,6 +275,19 @@ const CamerasTable = ({
                                 >
                                   <Eye className="w-4 h-4" />
                                   <span>Ver detalles</span>
+                                </button>
+
+                                {/* Ver historial */}
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onInspectCamera && onInspectCamera(camera.id);
+                                    setActionMenu(null);
+                                  }}
+                                  className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-purple-400 hover:bg-white/10 rounded-lg transition-colors"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                  <span>Ver historial</span>
                                 </button>
 
                                 {/* Editar */}

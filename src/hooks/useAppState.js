@@ -412,6 +412,23 @@ export const useAppState = () => {
       if (apiAvailable) {
         newTournament = await apiService.createTournament(tournamentData);
         setTournamentsData((prev) => [...prev, newTournament]);
+
+        // Crear entradas de historial para cada cámara asignada al torneo
+        if (tournamentData.cameras && tournamentData.cameras.length > 0) {
+          for (const cameraId of tournamentData.cameras) {
+            await createCameraHistoryEntry(
+              cameraId,
+              "tournament",
+              `Asignado a torneo: ${tournamentData.name}`,
+              {
+                tournamentId: newTournament.id,
+                tournamentName: tournamentData.name,
+                location: tournamentData.location,
+                date: tournamentData.date,
+              }
+            );
+          }
+        }
       } else {
         // Modo offline
         newTournament = {
@@ -522,6 +539,44 @@ export const useAppState = () => {
       };
 
       console.log("📦 Datos combinados para actualizar:", updatedData);
+
+      // Detectar cambios en cámaras
+      const currentCameras = currentTournament.cameras || [];
+      const updatedCameras = updatedData.cameras || [];
+      const newCameras = updatedCameras.filter((c) => !currentCameras.includes(c));
+      const removedCameras = currentCameras.filter((c) => !updatedCameras.includes(c));
+
+      // Crear entradas de historial para cámaras nuevas
+      if (newCameras.length > 0) {
+        for (const cameraId of newCameras) {
+          await createCameraHistoryEntry(
+            cameraId,
+            "tournament",
+            `Asignado a torneo: ${updatedData.name}`,
+            {
+              tournamentId: id,
+              tournamentName: updatedData.name,
+              location: updatedData.location,
+              date: updatedData.date,
+            }
+          );
+        }
+      }
+
+      // Crear entradas de historial para cámaras removidas
+      if (removedCameras.length > 0) {
+        for (const cameraId of removedCameras) {
+          await createCameraHistoryEntry(
+            cameraId,
+            "tournament",
+            `Removido de torneo: ${currentTournament.name}`,
+            {
+              tournamentId: id,
+              tournamentName: currentTournament.name,
+            }
+          );
+        }
+      }
 
       let updatedTournament;
       if (apiAvailable) {
@@ -898,6 +953,36 @@ export const useAppState = () => {
   // ========== FUNCIONES PARA ENVÍOS ==========
   // En useAppState.js - actualizar las funciones de envíos
 
+  // ========== FUNCIÓN HELPER PARA HISTORIAL ==========
+  const createCameraHistoryEntry = async (cameraId, type, title, details = {}) => {
+    try {
+      console.log(`📝 [createCameraHistoryEntry] Creando entrada de historial para cámara ${cameraId}`);
+      
+      const entry = {
+        id: `${cameraId}-${Date.now()}`,
+        cameraId,
+        type, // 'shipment', 'tournament', 'return', 'maintenance', 'status_change', 'assignment'
+        title,
+        details,
+        date: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+      };
+
+      if (apiAvailable) {
+        const createdEntry = await apiService.createCameraHistory(entry);
+        console.log(`✅ [createCameraHistoryEntry] Entrada creada:`, createdEntry);
+        return createdEntry;
+      } else {
+        console.log(`✅ [createCameraHistoryEntry] Modo offline, entrada lista:`, entry);
+        return entry;
+      }
+    } catch (error) {
+      console.error(`❌ [createCameraHistoryEntry] Error:`, error);
+      // No fallar la operación principal si falla el historial
+      return null;
+    }
+  };
+
   // ========== FUNCIONES PARA ENVÍOS ==========
   const createShipment = async (shipmentData) => {
     try {
@@ -906,6 +991,23 @@ export const useAppState = () => {
       if (apiAvailable) {
         const newShipment = await apiService.createShipment(shipmentData);
         setShipmentsData((prev) => [...prev, newShipment]);
+
+        // Crear entradas de historial para cada cámara en el envío
+        if (shipmentData.cameras && shipmentData.cameras.length > 0) {
+          for (const cameraId of shipmentData.cameras) {
+            await createCameraHistoryEntry(
+              cameraId,
+              "shipment",
+              `Enviado a ${shipmentData.destination}`,
+              {
+                shipmentId: newShipment.id,
+                destination: shipmentData.destination,
+                recipient: shipmentData.recipient,
+                trackingNumber: shipmentData.trackingNumber,
+              }
+            );
+          }
+        }
 
         // Actualizar el estado de las cámaras a "EN ENVIO" si el estado es "enviado"
         if (
@@ -996,7 +1098,7 @@ export const useAppState = () => {
     currentShipment,
     updatedShipment
   ) => {
-    const { cameras, recipient, status: newStatus } = updatedShipment;
+    const { cameras, recipient, status: newStatus, destination, id: shipmentId } = updatedShipment;
     const { status: oldStatus } = currentShipment;
 
     console.log("🔄 Manejando cambio de estado de envío:", {
@@ -1012,9 +1114,21 @@ export const useAppState = () => {
     // Caso 1: Cambio a "enviado" - Cámaras cambian a "EN ENVIO"
     if (newStatus === "enviado" && oldStatus !== "enviado") {
       console.log('📦 Cambiando cámaras a estado "EN ENVIO":', cameras);
-      cameras.forEach((cameraId) => {
+      for (const cameraId of cameras) {
         updateCamera(cameraId, { status: "en envio" });
-      });
+        // Crear entrada de historial
+        await createCameraHistoryEntry(
+          cameraId,
+          "shipment",
+          `Enviado a ${destination}`,
+          {
+            shipmentId,
+            destination,
+            recipient,
+            status: "enviado"
+          }
+        );
+      }
     }
 
     // Caso 2: Cambio a "entregado" - Cámaras cambian a "disponible" y se asignan al destinatario
@@ -1023,13 +1137,25 @@ export const useAppState = () => {
         '✅ Cambiando cámaras a estado "disponible" y asignando a:',
         recipient
       );
-      cameras.forEach((cameraId) => {
+      for (const cameraId of cameras) {
         updateCamera(cameraId, {
           status: "disponible",
           assignedTo: recipient,
           location: updatedShipment.destination,
         });
-      });
+        // Crear entrada de historial
+        await createCameraHistoryEntry(
+          cameraId,
+          "return",
+          `Entregado a ${recipient} en ${destination}`,
+          {
+            shipmentId,
+            destination,
+            recipient,
+            status: "entregado"
+          }
+        );
+      }
     }
 
     // Caso 3: Cambio de "enviado" a otro estado (cancelado, pendiente, etc.) - Revertir a "disponible"
@@ -1039,21 +1165,43 @@ export const useAppState = () => {
       newStatus !== "entregado"
     ) {
       console.log('↩️ Revertiendo cámaras a estado "disponible":', cameras);
-      cameras.forEach((cameraId) => {
+      for (const cameraId of cameras) {
         updateCamera(cameraId, { status: "disponible" });
-      });
+        // Crear entrada de historial
+        await createCameraHistoryEntry(
+          cameraId,
+          "shipment",
+          `Envío cancelado (${newStatus})`,
+          {
+            shipmentId,
+            reason: newStatus,
+            previousStatus: oldStatus
+          }
+        );
+      }
     }
 
     // Caso 4: Cambio de "entregado" a otro estado - Revertir asignación
     if (oldStatus === "entregado" && newStatus !== "entregado") {
       console.log("↩️ Revertiendo asignación de cámaras:", cameras);
-      cameras.forEach((cameraId) => {
+      for (const cameraId of cameras) {
         updateCamera(cameraId, {
           status: "disponible",
           assignedTo: "",
           location: "Almacén",
         });
-      });
+        // Crear entrada de historial
+        await createCameraHistoryEntry(
+          cameraId,
+          "shipment",
+          `Devolución cancelada (${newStatus})`,
+          {
+            shipmentId,
+            reason: newStatus,
+            previousRecipient: recipient
+          }
+        );
+      }
     }
   };
 

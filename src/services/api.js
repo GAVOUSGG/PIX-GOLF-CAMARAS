@@ -338,6 +338,42 @@ export const apiService = {
     return await response.json();
   },
 
+  // ========== HISTORIAL DE CÁMARAS ==========
+  async getCameraHistory() {
+    console.log("🔄 [API] GET /cameraHistory");
+    const response = await fetch(`${API_BASE}/cameraHistory`);
+    return await handleResponse(response);
+  },
+
+  async getCameraHistoryById(cameraId) {
+    console.log(`🔄 [API] GET /cameraHistory?cameraId=${cameraId}`);
+    const response = await fetch(`${API_BASE}/cameraHistory?cameraId=${cameraId}`);
+    return await handleResponse(response);
+  },
+
+  async createCameraHistory(entry) {
+    console.log("🌐 [API] POST /cameraHistory - Enviando:", entry);
+    const response = await fetch(`${API_BASE}/cameraHistory`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(entry),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("❌ [API] Error en createCameraHistory:", errorText);
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    console.log("✅ [API] Historial de cámara creado exitosamente:", result);
+    return result;
+  },
+
   // ========== FUNCIONES ADICIONALES ==========
   async healthCheck() {
     try {

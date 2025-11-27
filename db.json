@@ -248,18 +248,20 @@
       "state": "CDMX",
       "date": "2025-11-25",
       "endDate": "2025-11-29",
-      "status": "activo",
+      "status": "pendiente",
       "worker": "Larissa Granados",
       "workerId": "11",
-      "cameras": [],
+      "cameras": [
+        "prueba"
+      ],
       "holes": [
         16
       ],
       "days": 5,
       "field": "Club de Golf México",
-      "cameraStatus": "none",
+      "cameraStatus": "insufficient",
       "createdAt": "2025-11-23T00:37:19.019Z",
-      "updatedAt": "2025-11-26T21:01:23.449Z"
+      "updatedAt": "2025-11-27T02:54:41.750Z"
     },
     {
       "id": "7917",
@@ -386,7 +388,9 @@
       "email": "correo@gmail.com",
       "status": "disponible",
       "specialty": "Instalación cámaras solares",
-      "camerasAssigned": [],
+      "camerasAssigned": [
+        "prueba"
+      ],
       "photo": "",
       "updatedAt": "2025-11-22T21:35:32.657Z"
     },
@@ -434,9 +438,7 @@
       "email": "corrreo@gmail.com",
       "status": "disponible",
       "specialty": "Instalación cámaras solares",
-      "camerasAssigned": [
-        "prueba"
-      ],
+      "camerasAssigned": [],
       "photo": "",
       "createdAt": "2025-11-22T21:45:40.820Z"
     },
@@ -483,13 +485,62 @@
       "model": "Hikvision DS-2XS6A25G0-I/CH20S40",
       "type": "Solar",
       "status": "disponible",
-      "location": "CDMX",
+      "location": "Puebla",
       "serialNumber": "asda",
       "simNumber": "354621345645",
-      "assignedTo": "Larissa Granados",
+      "assignedTo": "Oscar Uriel Perez",
+      "assignedWorkerId": "11",
       "notes": "",
+      "historyCount": 0,
+      "lastStatusChange": null,
+      "lastWorkerId": "",
+      "lastTournamentId": "",
       "createdAt": "2025-11-23T00:48:46.469Z",
-      "updatedAt": "2025-11-26T21:02:04.981Z"
+      "updatedAt": "2025-11-27T03:00:51.334Z"
+    }
+  ],
+  "cameraHistory": [
+    {
+      "id": "prueba-1764212081750",
+      "cameraId": "prueba",
+      "type": "tournament",
+      "title": "Asignado a torneo: TORNEO MIGUEL ALEMAN VALDEZ",
+      "details": {
+        "tournamentId": "d5c6",
+        "tournamentName": "TORNEO MIGUEL ALEMAN VALDEZ",
+        "location": "Club de Golf México, CDMX",
+        "date": "2025-11-25"
+      },
+      "date": "2025-11-27T02:54:41.750Z",
+      "createdAt": "2025-11-27T02:54:41.750Z"
+    },
+    {
+      "id": "prueba-1764212432280",
+      "cameraId": "prueba",
+      "type": "shipment",
+      "title": "Enviado a Baja California Sur",
+      "details": {
+        "shipmentId": "ENV-001",
+        "destination": "Baja California Sur",
+        "recipient": "Oscar Uriel Perez",
+        "trackingNumber": "TRK1764212413743"
+      },
+      "date": "2025-11-27T03:00:32.280Z",
+      "createdAt": "2025-11-27T03:00:32.280Z"
+    },
+    {
+      "id": "prueba-1764212451301",
+      "cameraId": "prueba",
+      "type": "return",
+      "title": "Entregado a Oscar Uriel Perez en Baja California Sur",
+      "details": {
+        "shipmentId": "ENV-001",
+        "destination": "Baja California Sur",
+        "recipient": "Oscar Uriel Perez",
+        "status": "entregado"
+      },
+      "date": "2025-11-27T03:00:51.301Z",
+      "createdAt": "2025-11-27T03:00:51.301Z"
     }
   ],
   "shipments": [
@@ -498,16 +549,16 @@
       "cameras": [
         "prueba"
       ],
-      "destination": "Estado de México",
-      "recipient": "Larissa Granados",
-      "sender": "",
-      "shipper": "Ernesto De Keratry",
-      "date": "2025-11-23",
+      "destination": "Baja California Sur",
+      "recipient": "Oscar Uriel Perez",
+      "sender": "lol",
+      "shipper": "Larissa Granados",
+      "date": "2025-11-27",
       "status": "entregado",
-      "trackingNumber": "TRK1763859118225",
+      "trackingNumber": "TRK1764212413743",
       "extraItems": "",
-      "createdAt": "2025-11-23T00:52:22.775Z",
-      "updatedAt": "2025-11-26T21:02:02.833Z"
+      "createdAt": "2025-11-27T03:00:32.262Z",
+      "updatedAt": "2025-11-27T03:00:51.298Z"
     }
   ]
 }
