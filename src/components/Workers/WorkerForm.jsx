@@ -293,7 +293,7 @@ const WorkerForm = ({
               </label>
               <input
                 type="email"
-                required
+                optional
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
