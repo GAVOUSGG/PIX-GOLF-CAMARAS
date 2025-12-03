@@ -251,9 +251,7 @@
       "status": "activo",
       "worker": "Larissa Granados",
       "workerId": "11",
-      "cameras": [
-        "prueba"
-      ],
+      "cameras": [],
       "holes": [
         16
       ],
@@ -305,6 +303,74 @@
       "cameraStatus": "pending",
       "createdAt": "2025-11-25T04:17:31.912Z",
       "updatedAt": "2025-11-27T15:05:40.870Z"
+    },
+    {
+      "id": "a0c1",
+      "name": "CANCUN OPEN",
+      "location": "CANCUN, CANCUN",
+      "state": "Quintana Roo",
+      "date": "2025-11-30",
+      "endDate": "2025-11-30",
+      "status": "pendiente",
+      "worker": "Arturo Alvarado Morales",
+      "workerId": "4",
+      "cameras": [
+        "PRUEBA 1",
+        "PRUEBA 2"
+      ],
+      "holes": [
+        7
+      ],
+      "days": 1,
+      "field": "CANCUN",
+      "cameraStatus": "complete",
+      "createdAt": "2025-11-28T16:49:18.238Z"
+    },
+    {
+      "id": "2957",
+      "name": "valle imperial",
+      "location": "Valle imperial, Zapopan",
+      "state": "Jalisco",
+      "date": "2025-11-30",
+      "endDate": "2025-12-05",
+      "status": "pendiente",
+      "worker": "Ernesto De Keratry",
+      "workerId": "1",
+      "cameras": [
+        "PRUEBA 1",
+        "PRUEBA 2"
+      ],
+      "holes": [
+        5,
+        6
+      ],
+      "days": 6,
+      "field": "Valle imperial",
+      "cameraStatus": "insufficient",
+      "createdAt": "2025-11-28T20:23:53.703Z",
+      "updatedAt": "2025-11-28T20:26:44.012Z"
+    },
+    {
+      "id": "cf09",
+      "name": "cancun abierto",
+      "location": "Puerto cancun, cancun",
+      "state": "Quintana Roo",
+      "date": "2025-11-30",
+      "endDate": "2025-12-04",
+      "status": "pendiente",
+      "worker": "Arturo Alvarado Morales",
+      "workerId": "4",
+      "cameras": [
+        "PRUEBA 1",
+        "PRUEBA 2"
+      ],
+      "holes": [
+        1
+      ],
+      "days": 5,
+      "field": "Puerto cancun",
+      "cameraStatus": "complete",
+      "createdAt": "2025-11-28T20:36:30.676Z"
     }
   ],
   "workers": [
@@ -356,7 +422,9 @@
       "email": "arturo@gmail.com",
       "status": "disponible",
       "specialty": "Instalación cámaras solares",
-      "camerasAssigned": [],
+      "camerasAssigned": [
+        "PRUEBA 2"
+      ],
       "photo": "",
       "updatedAt": "2025-11-27T16:01:54.020Z"
     },
@@ -442,7 +510,7 @@
       "specialty": "Instalación cámaras solares",
       "camerasAssigned": [],
       "photo": "",
-      "createdAt": "2025-11-22T21:45:40.820Z"
+      "updatedAt": "2025-11-28T20:40:13.202Z"
     },
     {
       "id": "12",
@@ -487,13 +555,26 @@
       "model": "Hikvision DS-2XS6A25G0-I/CH20S40",
       "type": "Solar",
       "status": "disponible",
-      "location": "Jalisco",
+      "location": "Quintana Roo",
       "serialNumber": "3121523",
       "simNumber": "56123.",
-      "assignedTo": "Ernesto De Keratry",
+      "assignedTo": "Arturo Alvarado Morales",
       "notes": "",
       "createdAt": "2025-11-27T16:21:43.090Z",
-      "updatedAt": "2025-11-27T16:54:57.662Z"
+      "updatedAt": "2025-11-28T20:35:07.366Z"
+    },
+    {
+      "id": "PRUEBA 2",
+      "model": "Hikvision DS-2XS6A25G0-I/CH20S40",
+      "type": "Solar",
+      "status": "disponible",
+      "location": "Quintana Roo",
+      "serialNumber": "8485120.",
+      "simNumber": "412",
+      "assignedTo": "Arturo Alvarado Morales",
+      "notes": "",
+      "createdAt": "2025-11-27T17:16:10.190Z",
+      "updatedAt": "2025-11-28T20:35:08.516Z"
     }
   ],
   "cameraHistory": [
@@ -533,7 +614,7 @@
       "details": {
         "shipmentId": "ENV-002",
         "destination": "Jalisco",
-        "recipient": "Ernesto De Keratry",
+        "recipient": "E ",
         "status": "enviado"
       },
       "date": "2025-11-27T16:25:44.825Z",
@@ -552,6 +633,256 @@
       },
       "date": "2025-11-27T16:26:13.309Z",
       "createdAt": "2025-11-27T16:26:13.309Z"
+    },
+    {
+      "id": "PRUEBA 1-1764263800113",
+      "cameraId": "PRUEBA 1",
+      "type": "shipment",
+      "title": "Enviado a Quintana Roo",
+      "details": {
+        "shipmentId": "ENV-003",
+        "destination": "Quintana Roo",
+        "recipient": "Arturo Alvarado Morales",
+        "trackingNumber": "TRK1764263782266"
+      },
+      "date": "2025-11-27T17:16:40.113Z",
+      "createdAt": "2025-11-27T17:16:40.113Z"
+    },
+    {
+      "id": "PRUEBA 2-1764263800176",
+      "cameraId": "PRUEBA 2",
+      "type": "shipment",
+      "title": "Enviado a Quintana Roo",
+      "details": {
+        "shipmentId": "ENV-003",
+        "destination": "Quintana Roo",
+        "recipient": "Arturo Alvarado Morales",
+        "trackingNumber": "TRK1764263782266"
+      },
+      "date": "2025-11-27T17:16:40.176Z",
+      "createdAt": "2025-11-27T17:16:40.176Z"
+    },
+    {
+      "id": "PRUEBA 1-1764348329124",
+      "cameraId": "PRUEBA 1",
+      "type": "return",
+      "title": "Entregado a Arturo Alvarado Morales en Quintana Roo",
+      "details": {
+        "shipmentId": "ENV-003",
+        "destination": "Quintana Roo",
+        "recipient": "Arturo Alvarado Morales",
+        "status": "entregado"
+      },
+      "date": "2025-11-28T16:45:29.124Z",
+      "createdAt": "2025-11-28T16:45:29.124Z"
+    },
+    {
+      "id": "PRUEBA 2-1764348329156",
+      "cameraId": "PRUEBA 2",
+      "type": "return",
+      "title": "Entregado a Arturo Alvarado Morales en Quintana Roo",
+      "details": {
+        "shipmentId": "ENV-003",
+        "destination": "Quintana Roo",
+        "recipient": "Arturo Alvarado Morales",
+        "status": "entregado"
+      },
+      "date": "2025-11-28T16:45:29.156Z",
+      "createdAt": "2025-11-28T16:45:29.156Z"
+    },
+    {
+      "id": "PRUEBA 1-1764348558252",
+      "cameraId": "PRUEBA 1",
+      "type": "tournament",
+      "title": "Asignado a torneo: CANCUN OPEN",
+      "details": {
+        "tournamentId": "a0c1",
+        "tournamentName": "CANCUN OPEN",
+        "location": "CANCUN, CANCUN",
+        "date": "2025-11-30"
+      },
+      "date": "2025-11-28T16:49:18.252Z",
+      "createdAt": "2025-11-28T16:49:18.252Z"
+    },
+    {
+      "id": "PRUEBA 2-1764348558386",
+      "cameraId": "PRUEBA 2",
+      "type": "tournament",
+      "title": "Asignado a torneo: CANCUN OPEN",
+      "details": {
+        "tournamentId": "a0c1",
+        "tournamentName": "CANCUN OPEN",
+        "location": "CANCUN, CANCUN",
+        "date": "2025-11-30"
+      },
+      "date": "2025-11-28T16:49:18.386Z",
+      "createdAt": "2025-11-28T16:49:18.386Z"
+    },
+    {
+      "id": "PRUEBA 1-1764349270742",
+      "cameraId": "PRUEBA 1",
+      "type": "shipment",
+      "title": "Enviado a Quintana Roo",
+      "details": {
+        "shipmentId": "ENV-003",
+        "destination": "Quintana Roo",
+        "recipient": "Arturo Alvarado Morales",
+        "status": "enviado"
+      },
+      "date": "2025-11-28T17:01:10.742Z",
+      "createdAt": "2025-11-28T17:01:10.742Z"
+    },
+    {
+      "id": "PRUEBA 2-1764349270786",
+      "cameraId": "PRUEBA 2",
+      "type": "shipment",
+      "title": "Enviado a Quintana Roo",
+      "details": {
+        "shipmentId": "ENV-003",
+        "destination": "Quintana Roo",
+        "recipient": "Arturo Alvarado Morales",
+        "status": "enviado"
+      },
+      "date": "2025-11-28T17:01:10.786Z",
+      "createdAt": "2025-11-28T17:01:10.786Z"
+    },
+    {
+      "id": "PRUEBA 1-1764349270833",
+      "cameraId": "PRUEBA 1",
+      "type": "shipment",
+      "title": "Devolución cancelada (enviado)",
+      "details": {
+        "shipmentId": "ENV-003",
+        "reason": "enviado",
+        "previousRecipient": "Arturo Alvarado Morales"
+      },
+      "date": "2025-11-28T17:01:10.833Z",
+      "createdAt": "2025-11-28T17:01:10.833Z"
+    },
+    {
+      "id": "PRUEBA 2-1764349270880",
+      "cameraId": "PRUEBA 2",
+      "type": "shipment",
+      "title": "Devolución cancelada (enviado)",
+      "details": {
+        "shipmentId": "ENV-003",
+        "reason": "enviado",
+        "previousRecipient": "Arturo Alvarado Morales"
+      },
+      "date": "2025-11-28T17:01:10.880Z",
+      "createdAt": "2025-11-28T17:01:10.880Z"
+    },
+    {
+      "id": "PRUEBA 1-1764361475847",
+      "cameraId": "PRUEBA 1",
+      "type": "tournament",
+      "title": "Asignado a torneo: valle imperial",
+      "details": {
+        "tournamentId": "2957",
+        "tournamentName": "valle imperial",
+        "location": "Valle imperial, Zapopan",
+        "date": "2025-11-30"
+      },
+      "date": "2025-11-28T20:24:35.847Z",
+      "createdAt": "2025-11-28T20:24:35.847Z"
+    },
+    {
+      "id": "PRUEBA 2-1764361475860",
+      "cameraId": "PRUEBA 2",
+      "type": "tournament",
+      "title": "Asignado a torneo: valle imperial",
+      "details": {
+        "tournamentId": "2957",
+        "tournamentName": "valle imperial",
+        "location": "Valle imperial, Zapopan",
+        "date": "2025-11-30"
+      },
+      "date": "2025-11-28T20:24:35.860Z",
+      "createdAt": "2025-11-28T20:24:35.860Z"
+    },
+    {
+      "id": "PRUEBA 1-1764362045304",
+      "cameraId": "PRUEBA 1",
+      "type": "shipment",
+      "title": "Enviado a Quintana Roo",
+      "details": {
+        "shipmentId": "ENV-004",
+        "destination": "Quintana Roo",
+        "recipient": "Arturo Alvarado Morales",
+        "trackingNumber": "TRK1764362003709"
+      },
+      "date": "2025-11-28T20:34:05.304Z",
+      "createdAt": "2025-11-28T20:34:05.304Z"
+    },
+    {
+      "id": "PRUEBA 2-1764362045383",
+      "cameraId": "PRUEBA 2",
+      "type": "shipment",
+      "title": "Enviado a Quintana Roo",
+      "details": {
+        "shipmentId": "ENV-004",
+        "destination": "Quintana Roo",
+        "recipient": "Arturo Alvarado Morales",
+        "trackingNumber": "TRK1764362003709"
+      },
+      "date": "2025-11-28T20:34:05.383Z",
+      "createdAt": "2025-11-28T20:34:05.383Z"
+    },
+    {
+      "id": "PRUEBA 1-1764362107304",
+      "cameraId": "PRUEBA 1",
+      "type": "return",
+      "title": "Entregado a Arturo Alvarado Morales en Quintana Roo",
+      "details": {
+        "shipmentId": "ENV-004",
+        "destination": "Quintana Roo",
+        "recipient": "Arturo Alvarado Morales",
+        "status": "entregado"
+      },
+      "date": "2025-11-28T20:35:07.304Z",
+      "createdAt": "2025-11-28T20:35:07.304Z"
+    },
+    {
+      "id": "PRUEBA 2-1764362107322",
+      "cameraId": "PRUEBA 2",
+      "type": "return",
+      "title": "Entregado a Arturo Alvarado Morales en Quintana Roo",
+      "details": {
+        "shipmentId": "ENV-004",
+        "destination": "Quintana Roo",
+        "recipient": "Arturo Alvarado Morales",
+        "status": "entregado"
+      },
+      "date": "2025-11-28T20:35:07.322Z",
+      "createdAt": "2025-11-28T20:35:07.322Z"
+    },
+    {
+      "id": "PRUEBA 1-1764362190751",
+      "cameraId": "PRUEBA 1",
+      "type": "tournament",
+      "title": "Asignado a torneo: cancun abierto",
+      "details": {
+        "tournamentId": "cf09",
+        "tournamentName": "cancun abierto",
+        "location": "Puerto cancun, cancun",
+        "date": "2025-11-30"
+      },
+      "date": "2025-11-28T20:36:30.751Z",
+      "createdAt": "2025-11-28T20:36:30.751Z"
+    },
+    {
+      "id": "PRUEBA 2-1764362190850",
+      "cameraId": "PRUEBA 2",
+      "type": "tournament",
+      "title": "Asignado a torneo: cancun abierto",
+      "details": {
+        "tournamentId": "cf09",
+        "tournamentName": "cancun abierto",
+        "location": "Puerto cancun, cancun",
+        "date": "2025-11-30"
+      },
+      "date": "2025-11-28T20:36:30.850Z",
+      "createdAt": "2025-11-28T20:36:30.850Z"
     }
   ],
   "shipments": [
@@ -586,6 +917,56 @@
       "extraItems": "",
       "createdAt": "2025-11-27T16:24:15.722Z",
       "updatedAt": "2025-11-27T16:26:13.303Z"
+    },
+    {
+      "id": "ENV-003",
+      "cameras": [
+        "PRUEBA 1",
+        "PRUEBA 2"
+      ],
+      "destination": "Quintana Roo",
+      "recipient": "Arturo Alvarado Morales",
+      "sender": "",
+      "shipper": "Ernesto De Keratry",
+      "date": "2025-11-27",
+      "status": "enviado",
+      "trackingNumber": "TRK1764263782266",
+      "extraItems": "",
+      "createdAt": "2025-11-27T17:16:40.096Z",
+      "updatedAt": "2025-11-28T17:02:18.193Z"
+    },
+    {
+      "id": "ENV-004",
+      "cameras": [
+        "PRUEBA 1",
+        "PRUEBA 2"
+      ],
+      "destination": "Quintana Roo",
+      "recipient": "Arturo Alvarado Morales",
+      "sender": "POTOSINOS",
+      "shipper": "Ernesto De Keratry",
+      "date": "2025-11-28",
+      "status": "entregado",
+      "trackingNumber": "22015181585",
+      "extraItems": "cargador",
+      "createdAt": "2025-11-28T20:34:05.249Z",
+      "updatedAt": "2025-11-28T20:35:07.304Z"
+    },
+    {
+      "id": "ENV-005",
+      "cameras": [
+        "prueba 4"
+      ],
+      "destination": "CDMX",
+      "recipient": "Larissa Granados",
+      "sender": "tres guerras",
+      "shipper": "Ernesto De Keratry",
+      "date": "2025-11-29",
+      "status": "entregado",
+      "trackingNumber": "1234567",
+      "extraItems": "",
+      "createdAt": "2025-11-28T20:43:05.041Z",
+      "updatedAt": "2025-11-28T20:44:22.673Z"
     }
   ]
 }

@@ -35,13 +35,13 @@ const CamerasTable = ({
   }, [actionMenu]);
 
   const handleEdit = (camera) => {
-    console.log("✏️ Editando cámara:", camera);
+    console.log("Editando cámara:", camera);
     onEditCamera(camera);
     setActionMenu(null);
   };
 
   const handleDelete = (cameraId) => {
-    console.log("🗑️ Solicitando eliminar cámara:", cameraId);
+    console.log("Solicitando eliminar cámara:", cameraId);
     if (confirm("¿Estás seguro de que quieres eliminar esta cámara?")) {
       onDeleteCamera(cameraId);
     }
@@ -252,7 +252,7 @@ const CamerasTable = ({
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              console.log("📋 Click en menú acciones cámara");
+                              console.log("Click en menú acciones cámara");
                               setActionMenu(
                                 actionMenu === camera.id ? null : camera.id
                               );

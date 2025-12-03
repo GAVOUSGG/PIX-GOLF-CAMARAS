@@ -150,9 +150,9 @@ const CameraHistory = () => {
             onChange={(e) => setFilterCamera(e.target.value)}
             className="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-500/50 focus:bg-white/10 transition-all"
           >
-            <option value="all">Todas las cámaras</option>
+            <option bg-gray-700 value="all">Todas las cámaras</option>
             {cameras.map((camera) => (
-              <option key={camera.id} value={camera.id}>
+              <option className="bg-gray-700" key={camera.id} value={camera.id}>
                 {camera.id} - {camera.model}
               </option>
             ))}

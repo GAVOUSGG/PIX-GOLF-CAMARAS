@@ -7,7 +7,7 @@ const Navigation = ({ activeTab, setActiveTab }) => {
     { id: 'tournaments', label: 'Torneos', icon: Calendar },
     { id: 'workers', label: 'Trabajadores', icon: Users },
     { id: 'cameras', label: 'Cámaras', icon: Camera },
-    { id: 'history', label: 'Historial', icon: History },
+    { id: 'history', label: 'Historial Camaras', icon: History },
     { id: 'logistics', label: 'Logística', icon: Package },
     { id: 'map', label: 'Mapa', icon: MapPin }
   ];
