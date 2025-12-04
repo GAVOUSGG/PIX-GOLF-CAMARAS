@@ -7,4 +7,16 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          ui: ['lucide-react'],
+          map: ['leaflet', 'react-leaflet'],
+          db: ['sequelize', 'sqlite3']
+        }
+      }
+    }
+  }
 })

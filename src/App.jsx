@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useAppState } from "./hooks/useAppState";
 import Layout from "./components/Layout/Layout";
-import Dashboard from "./pages/Dashboard";
-import Tournaments from "./pages/Tournaments";
-import Workers from "./pages/Workers";
-import Cameras from "./pages/Cameras";
-import Logistics from "./pages/Logistics";
-import Map from "./pages/Map";
-import CameraHistory from "./pages/CameraHistory";
 import CameraInspector from "./components/Cameras/Inspector/CameraInspector";
 import TournamentModal from "./components/Tournaments/TournamentModal";
 import OAuthCallback from "./components/GoogleCalendar/OAuthCallback";
+
+// Lazy loading de páginas
+const Dashboard = React.lazy(() => import("./pages/Dashboard"));
+const Tournaments = React.lazy(() => import("./pages/Tournaments"));
+const Workers = React.lazy(() => import("./pages/Workers"));
+const Cameras = React.lazy(() => import("./pages/Cameras"));
+const Logistics = React.lazy(() => import("./pages/Logistics"));
+const Map = React.lazy(() => import("./pages/Map"));
+const CameraHistory = React.lazy(() => import("./pages/CameraHistory"));
 
 function App() {
   const [inspectorCameraId, setInspectorCameraId] = useState(null);
@@ -192,7 +194,15 @@ function App() {
             <span>Modo sin conexión - Los datos se guardan localmente</span>
           </div>
         )}
-        {renderContent()}
+        <Suspense 
+          fallback={
+            <div className="flex items-center justify-center h-full min-h-[400px]">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+            </div>
+          }
+        >
+          {renderContent()}
+        </Suspense>
       </Layout>
 
       {selectedTournament && (
