@@ -1,4 +1,4 @@
-import { sequelize, Camera } from './server/db.js';
+import { sequelize, Camera } from './db.js';
 
 const newCamerasData = [
   { id: '1', serialNumber: 'K17243721', simNumber: '3320434329', notes: 'Falta una Antena' },

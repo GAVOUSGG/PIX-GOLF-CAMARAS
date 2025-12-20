@@ -1,4 +1,4 @@
-import { sequelize, Tournament } from './server/db.js';
+import { sequelize, Tournament } from './db.js';
 
 const checkTournaments = async () => {
   try {

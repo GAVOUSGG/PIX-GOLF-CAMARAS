@@ -1,4 +1,4 @@
-import { sequelize, Worker } from './server/db.js';
+import { sequelize, Worker } from './db.js';
 
 const newWorkersData = [
   { id: '1', name: 'LARISSA GRANADOS', state: 'CDMX', email: 'larissagm@gmail.com', phone: '5567031343' },
