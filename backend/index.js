@@ -1,112 +1,301 @@
 import express from 'express';
 import cors from 'cors';
-import { sequelize, initDb, Tournament, Worker, Camera, Shipment, CameraHistory } from './db.js';
+import { sequelize, Tournament, Worker, Camera, Shipment, CameraHistory, User, LoginAttempt, initDb } from './db.js';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import helmet from 'helmet';
 
 const app = express();
 const PORT = 3001;
+const JWT_SECRET = 'your-secret-key-change-in-production'; // In production use env var
 
+// Middleware
 app.use(cors());
+app.use(helmet());
 app.use(express.json());
 
-// Generic CRUD handlers
-const createCrudRoutes = (router, Model, pathName) => {
-  // GET all with filtering
-  router.get(`/${pathName}`, async (req, res) => {
+// Auth Middleware
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};
+
+// Initialize Database
+initDb();
+
+// Helper to create CRUD routes
+const createCrudRoutes = (model, path) => {
+  app.get(path, async (req, res) => {
     try {
-      const where = {};
-      // Support simple filtering like json-server (e.g. ?cameraId=123)
-      // Ignore special params starting with _ (like _sort, _limit, etc.)
-      for (const key in req.query) {
-        if (!key.startsWith('_')) {
-          where[key] = req.query[key];
-        }
-      }
-      console.log(`🔍 [API] GET /${pathName} filters:`, where);
-      const items = await Model.findAll({ where });
+      const items = await model.findAll();
       res.json(items);
     } catch (error) {
-      console.error(`Error fetching ${pathName}:`, error);
       res.status(500).json({ error: error.message });
     }
   });
 
-  // GET one
-  router.get(`/${pathName}/:id`, async (req, res) => {
+  app.post(path, async (req, res) => {
     try {
-      const item = await Model.findByPk(req.params.id);
+      const newItem = await model.create(req.body);
+      res.json(newItem);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.put(`${path}/:id`, async (req, res) => {
+    try {
+      const item = await model.findByPk(req.params.id);
       if (item) {
+        await item.update(req.body);
         res.json(item);
       } else {
-        res.status(404).json({ error: 'Not found' });
+        res.status(404).json({ error: 'Item not found' });
       }
     } catch (error) {
-      console.error(`Error fetching ${pathName}/${req.params.id}:`, error);
       res.status(500).json({ error: error.message });
     }
   });
 
-  // POST
-  router.post(`/${pathName}`, async (req, res) => {
+  app.delete(`${path}/:id`, async (req, res) => {
     try {
-      const newItem = await Model.create(req.body);
-      res.status(201).json(newItem);
-    } catch (error) {
-      console.error(`Error creating ${pathName}:`, error);
-      res.status(500).json({ error: error.message });
-    }
-  });
-
-  // PUT
-  router.put(`/${pathName}/:id`, async (req, res) => {
-    try {
-      const [updated] = await Model.update(req.body, {
-        where: { id: req.params.id }
-      });
-      if (updated) {
-        const updatedItem = await Model.findByPk(req.params.id);
-        res.json(updatedItem);
+      const item = await model.findByPk(req.params.id);
+      if (item) {
+        await item.destroy();
+        res.json({ message: 'Item deleted' });
       } else {
-        res.status(404).json({ error: 'Not found' });
+        res.status(404).json({ error: 'Item not found' });
       }
     } catch (error) {
-      console.error(`Error updating ${pathName}/${req.params.id}:`, error);
-      res.status(500).json({ error: error.message });
-    }
-  });
-
-  // DELETE
-  router.delete(`/${pathName}/:id`, async (req, res) => {
-    try {
-      const deleted = await Model.destroy({
-        where: { id: req.params.id }
-      });
-      if (deleted) {
-        res.status(204).send();
-      } else {
-        res.status(404).json({ error: 'Not found' });
-      }
-    } catch (error) {
-      console.error(`Error deleting ${pathName}/${req.params.id}:`, error);
       res.status(500).json({ error: error.message });
     }
   });
 };
 
-// Register routes
-createCrudRoutes(app, Tournament, 'tournaments');
-createCrudRoutes(app, Worker, 'workers');
-createCrudRoutes(app, Camera, 'cameras');
-createCrudRoutes(app, Shipment, 'shipments');
-createCrudRoutes(app, CameraHistory, 'cameraHistory');
+// Create routes for main entities
+createCrudRoutes(Tournament, '/tournaments');
+createCrudRoutes(Worker, '/workers');
+createCrudRoutes(Camera, '/cameras');
+createCrudRoutes(Shipment, '/shipments');
 
+// Camera History Routes
+app.get('/camera-history', async (req, res) => {
+  try {
+    const history = await CameraHistory.findAll({
+      order: [['date', 'DESC']]
+    });
+    res.json(history);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
+app.post('/camera-history', async (req, res) => {
+  try {
+    const newEntry = await CameraHistory.create(req.body);
+    res.json(newEntry);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.delete('/camera-history/:id', async (req, res) => {
+  try {
+    const entry = await CameraHistory.findByPk(req.params.id);
+    if (entry) {
+      await entry.destroy();
+      res.json({ message: 'History entry deleted' });
+    } else {
+      res.status(404).json({ error: 'Entry not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Auth Routes
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  const ip = req.ip;
+
+  try {
+    const user = await User.findOne({ where: { username } });
+
+    // Log attempt
+    await LoginAttempt.create({
+      ip,
+      username,
+      success: false // Default to false, update if success
+    });
+
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Check lockout
+    if (user.lockoutUntil && new Date() < new Date(user.lockoutUntil)) {
+      const remaining = Math.ceil((new Date(user.lockoutUntil) - new Date()) / 60000);
+      return res.status(429).json({ error: `Account locked. Try again in ${remaining} minutes.` });
+    }
+
+    // Check password
+    const validPassword = await bcrypt.compare(password, user.password);
+
+    if (!validPassword) {
+      user.failedAttempts += 1;
+      if (user.failedAttempts >= 5) {
+        user.lockoutUntil = new Date(Date.now() + 15 * 60 * 1000); // 15 min lockout
+      }
+      await user.save();
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Reset lockout on success
+    user.failedAttempts = 0;
+    user.lockoutUntil = null;
+    user.lastLogin = new Date().toISOString();
+    await user.save();
+
+    // Update last login attempt to success
+    const lastAttempt = await LoginAttempt.findOne({ 
+      where: { username, ip },
+      order: [['timestamp', 'DESC']]
+    });
+    if (lastAttempt) {
+      lastAttempt.success = true;
+      await lastAttempt.save();
+    }
+
+    // Generate Token
+    const token = jwt.sign(
+      { id: user.id, username: user.username, role: user.role },
+      JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    res.json({
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        role: user.role,
+        lastLogin: user.lastLogin
+      }
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Protected User Routes
+app.get('/users', authenticateToken, async (req, res) => {
+  if (req.user.role !== 'admin') return res.sendStatus(403);
+  try {
+    const users = await User.findAll({
+      attributes: ['id', 'username', 'role', 'lastLogin', 'createdAt', 'failedAttempts', 'lockoutUntil']
+    });
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/users', authenticateToken, async (req, res) => {
+  if (req.user.role !== 'admin') return res.sendStatus(403);
+  try {
+    const { username, password, role } = req.body;
+    
+    const existing = await User.findOne({ where: { username } });
+    if (existing) {
+      return res.status(400).json({ error: 'Username already exists' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await User.create({
+      id: Date.now().toString(),
+      username,
+      password: hashedPassword,
+      role: role || 'user'
+    });
+
+    res.status(201).json({
+      id: newUser.id,
+      username: newUser.username,
+      role: newUser.role,
+      createdAt: newUser.createdAt
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put('/users/:id', authenticateToken, async (req, res) => {
+  if (req.user.role !== 'admin') return res.sendStatus(403);
+  try {
+    const { username, password, role } = req.body;
+    const user = await User.findByPk(req.params.id);
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (username) user.username = username;
+    if (password) user.password = await bcrypt.hash(password, 10);
+    if (role) user.role = role;
+
+    await user.save();
+
+    res.json({
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      updatedAt: user.updatedAt
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.delete('/users/:id', authenticateToken, async (req, res) => {
+  if (req.user.role !== 'admin') return res.sendStatus(403);
+  try {
+    const user = await User.findByPk(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    await user.destroy();
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Login History Route
+app.get('/login-history', authenticateToken, async (req, res) => {
+  if (req.user.role !== 'admin') return res.sendStatus(403);
+  try {
+    const history = await LoginAttempt.findAll({
+      order: [['timestamp', 'DESC']],
+      limit: 100
+    });
+    res.json(history);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // Start server
-const startServer = async () => {
-  await initDb();
-  app.listen(PORT, () => {
-    console.log(`Server is running on http://127.0.0.1:${PORT}`);
-  });
-};
-
-startServer();
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});

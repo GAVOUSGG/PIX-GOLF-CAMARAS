@@ -1,4 +1,4 @@
-const API_BASE = "http://127.0.0.1:3001";
+const API_BASE = import.meta.env.VITE_API_URL || "http://127.0.0.1:3001";
 
 // Función helper mejorada para manejar errores
 const handleResponse = async (response) => {
@@ -340,20 +340,20 @@ export const apiService = {
 
   // ========== HISTORIAL DE CÁMARAS ==========
   async getCameraHistory() {
-    console.log("🔄 [API] GET /cameraHistory");
-    const response = await fetch(`${API_BASE}/cameraHistory`);
+    console.log("🔄 [API] GET /camera-history");
+    const response = await fetch(`${API_BASE}/camera-history`);
     return await handleResponse(response);
   },
 
   async getCameraHistoryById(cameraId) {
-    console.log(`🔄 [API] GET /cameraHistory?cameraId=${cameraId}`);
-    const response = await fetch(`${API_BASE}/cameraHistory?cameraId=${cameraId}`);
+    console.log(`🔄 [API] GET /camera-history?cameraId=${cameraId}`);
+    const response = await fetch(`${API_BASE}/camera-history?cameraId=${cameraId}`);
     return await handleResponse(response);
   },
 
   async createCameraHistory(entry) {
-    console.log("🌐 [API] POST /cameraHistory - Enviando:", entry);
-    const response = await fetch(`${API_BASE}/cameraHistory`, {
+    console.log("🌐 [API] POST /camera-history - Enviando:", entry);
+    const response = await fetch(`${API_BASE}/camera-history`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -375,8 +375,8 @@ export const apiService = {
   },
 
   async deleteCameraHistory(id) {
-    console.log(`🗑️ [API] DELETE /cameraHistory/${id}`);
-    const response = await fetch(`${API_BASE}/cameraHistory/${id}`, {
+    console.log(`🗑️ [API] DELETE /camera-history/${id}`);
+    const response = await fetch(`${API_BASE}/camera-history/${id}`, {
       method: "DELETE",
     });
 

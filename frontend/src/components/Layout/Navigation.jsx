@@ -1,7 +1,7 @@
 import React from 'react';
-import { Calendar, Camera, Package, Users, MapPin, History } from 'lucide-react';
+import { Calendar, Camera, Package, Users, MapPin, History, Shield } from 'lucide-react';
 
-const Navigation = ({ activeTab, setActiveTab }) => {
+const Navigation = ({ activeTab, setActiveTab, user }) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Calendar },
     { id: 'tournaments', label: 'Torneos', icon: Calendar },
@@ -12,15 +12,19 @@ const Navigation = ({ activeTab, setActiveTab }) => {
     { id: 'map', label: 'Mapa', icon: MapPin }
   ];
 
+  if (user?.role === 'admin') {
+    menuItems.push({ id: 'admin', label: 'Admin', icon: Shield });
+  }
+
   return (
     <div className="bg-black/20 backdrop-blur-lg border-b border-white/10">
       <div className="max-w-7xl mx-auto px-6">
-        <nav className="flex space-x-8">
+        <nav className="flex space-x-8 overflow-x-auto">
           {menuItems.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`flex items-center space-x-2 px-4 py-4 border-b-2 transition-all duration-200 ${
+              className={`flex items-center space-x-2 px-4 py-4 border-b-2 transition-all duration-200 whitespace-nowrap ${
                 activeTab === id
                   ? 'border-emerald-400 text-emerald-400'
                   : 'border-transparent text-gray-400 hover:text-white'
