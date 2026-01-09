@@ -1,5 +1,6 @@
 import React from "react";
 import StatsGrid from "../components/Dashboard/StatsGrid";
+import StatisticsSection from "../components/Dashboard/StatisticsSection";
 import ActiveTournaments from "../components/Dashboard/ActiveTournaments";
 import MexicoMap from "../components/Map/MexicoMap";
 import TasksList from "../components/Tasks/TasksList";
@@ -12,6 +13,9 @@ const Dashboard = ({ tournamentsData, camerasData, workersData, shipmentsData })
         cameras={camerasData}
         workers={workersData}
       />
+
+      {/* Sección de Estadísticas */}
+      <StatisticsSection tournaments={tournamentsData} />
  
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ActiveTournaments tournaments={tournamentsData} />
