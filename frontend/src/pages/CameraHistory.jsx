@@ -111,7 +111,7 @@ const CameraHistory = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-3 md:p-6">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-4 mb-4">
@@ -119,7 +119,7 @@ const CameraHistory = () => {
             <History className="w-8 h-8 text-emerald-400" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-white">
+            <h1 className="text-xl md:text-3xl font-bold text-white">
               Historial de Cámaras
             </h1>
             <p className="text-gray-400 text-sm mt-1">
@@ -234,19 +234,19 @@ const CameraHistory = () => {
         ) : (
           <div className="relative">
             {/* Vertical Timeline Line */}
-            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald-500 via-blue-500 to-purple-500 opacity-20"></div>
+            <div className="absolute left-5 md:left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald-500 via-blue-500 to-purple-500 opacity-20"></div>
 
             {/* Events */}
             <div className="space-y-6">
               {filteredEvents.map((event, index) => {
                 const camera = cameras.find((c) => c.id === event.cameraId);
                 return (
-                  <div key={event.id} className="relative pl-20">
+                  <div key={event.id} className="relative pl-14 md:pl-20">
                     {/* Timeline Dot */}
                     <div className="absolute left-0 top-6 flex items-center gap-4">
                       <div className="relative">
-                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-emerald-500/30 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-                          <span className="text-lg font-bold text-emerald-400">
+                        <div className="w-10 h-10 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-emerald-500/30 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                          <span className="text-sm md:text-lg font-bold text-emerald-400">
                             {filteredEvents.length - index}
                           </span>
                         </div>

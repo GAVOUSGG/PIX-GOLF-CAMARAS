@@ -395,6 +395,23 @@ export const apiService = {
     return await response.json();
   },
 
+  async clearCameraHistory() {
+    console.log("🗑️ [API] DELETE /camera-history (ALL)");
+    const response = await fetch(`${API_BASE}/camera-history`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("❌ [API] Error en clearCameraHistory:", errorText);
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
+    }
+
+    return await response.json();
+  },
+
   // ========== FUNCIONES ADICIONALES ==========
   async healthCheck() {
     try {

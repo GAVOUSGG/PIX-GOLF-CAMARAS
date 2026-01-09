@@ -70,6 +70,9 @@ const Camera = sequelize.define('Camera', {
   batteryLevel: DataTypes.INTEGER,
   lastMaintenance: DataTypes.STRING,
   assignedTo: DataTypes.STRING,
+  serialNumber: DataTypes.STRING,
+  simNumber: DataTypes.STRING,
+  notes: DataTypes.STRING,
 }, {
   timestamps: true,
 });

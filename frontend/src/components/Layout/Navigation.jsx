@@ -18,8 +18,8 @@ const Navigation = ({ activeTab, setActiveTab, user }) => {
 
   return (
     <div className="bg-black/20 backdrop-blur-lg border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-6">
-        <nav className="flex space-x-8 overflow-x-auto">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
+        <nav className="flex space-x-4 md:space-x-8 overflow-x-auto scrollbar-hide py-2 md:py-0">
           {menuItems.map(({ id, label, icon: Icon }) => (
             <button
               key={id}

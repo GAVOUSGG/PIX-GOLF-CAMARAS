@@ -107,6 +107,19 @@ app.post('/camera-history', async (req, res) => {
   }
 });
 
+app.delete('/camera-history', async (req, res) => {
+  try {
+    await CameraHistory.destroy({
+      where: {}, 
+      // truncate: true // Removed to ensure SQLite compatibility
+    });
+    res.json({ message: 'History cleared successfully' });
+  } catch (error) {
+    console.error('Error clearing history:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.delete('/camera-history/:id', async (req, res) => {
   try {
     const entry = await CameraHistory.findByPk(req.params.id);

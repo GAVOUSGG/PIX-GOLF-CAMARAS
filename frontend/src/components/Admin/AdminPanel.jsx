@@ -130,16 +130,16 @@ const AdminPanel = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-white">Panel de Administración</h2>
-          <p className="text-slate-400">Gestión de usuarios y monitoreo de actividad</p>
+          <h2 className="text-xl md:text-2xl font-bold text-white">Panel de Administración</h2>
+          <p className="text-sm md:text-base text-slate-400">Gestión de usuarios y monitoreo de actividad</p>
         </div>
-        <div className="flex space-x-3">
-          <div className="flex bg-slate-800 rounded-lg p-1 mr-4">
+        <div className="flex flex-wrap gap-2 md:space-x-3">
+          <div className="flex bg-slate-800 rounded-lg p-1 mr-0 md:mr-4 w-full md:w-auto overflow-x-auto">
             <button
               onClick={() => setActiveView('users')}
-              className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
+              className={`flex-1 md:flex-none px-3 md:px-4 py-1.5 rounded-md text-sm font-medium transition-all whitespace-nowrap ${
                 activeView === 'users' 
                   ? 'bg-emerald-600 text-white shadow-lg' 
                   : 'text-slate-400 hover:text-white'
@@ -149,7 +149,7 @@ const AdminPanel = () => {
             </button>
             <button
               onClick={() => setActiveView('history')}
-              className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
+              className={`flex-1 md:flex-none px-3 md:px-4 py-1.5 rounded-md text-sm font-medium transition-all whitespace-nowrap ${
                 activeView === 'history' 
                   ? 'bg-emerald-600 text-white shadow-lg' 
                   : 'text-slate-400 hover:text-white'
@@ -157,12 +157,44 @@ const AdminPanel = () => {
             >
               Historial
             </button>
+            {activeView === 'history' && (
+              <button
+                onClick={async () => {
+                  if (window.confirm('¿Estás seguro de eliminar TODO el historial de cámaras? Esta acción no se puede deshacer.')) {
+                     try {
+                       const token = localStorage.getItem('token');
+                       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/camera-history`, {
+                         method: 'DELETE',
+                         headers: {
+                           'Content-Type': 'application/json',
+                           'Authorization': `Bearer ${token}`
+                         }
+                       });
+
+                       if (response.ok) {
+                         fetchHistory();
+                         alert('Historial eliminado exitosamente');
+                       } else {
+                         const data = await response.json();
+                         alert(data.error || 'Error al eliminar historial');
+                       }
+                     } catch (error) {
+                       console.error(error);
+                       alert('Error de conexión al eliminar historial');
+                     }
+                  }
+                }}
+                className="ml-2 px-3 md:px-4 py-1.5 rounded-md text-sm font-medium transition-all bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white border border-red-500/20"
+              >
+                Eliminar Historial
+              </button>
+            )}
           </div>
           
           {activeView === 'users' && (
             <button 
               onClick={() => openModal()}
-              className="flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors text-sm font-medium"
+              className="flex-1 md:flex-none flex items-center justify-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors text-sm font-medium whitespace-nowrap"
             >
               <Plus className="w-4 h-4 mr-2" />
               Crear Usuario
@@ -183,19 +215,19 @@ const AdminPanel = () => {
             <table className="w-full text-left">
               <thead>
                 <tr className="bg-slate-900/50 border-b border-slate-700">
-                  <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                  <th className="px-4 py-3 md:px-6 md:py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     Usuario
                   </th>
-                  <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                  <th className="px-4 py-3 md:px-6 md:py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider hidden md:table-cell">
                     Rol
                   </th>
-                  <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                  <th className="px-4 py-3 md:px-6 md:py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     Estado
                   </th>
-                  <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                  <th className="px-4 py-3 md:px-6 md:py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider hidden sm:table-cell">
                     Último Acceso
                   </th>
-                  <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider text-right">
+                  <th className="px-4 py-3 md:px-6 md:py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider text-right">
                     Acciones
                   </th>
                 </tr>
@@ -203,7 +235,7 @@ const AdminPanel = () => {
               <tbody className="divide-y divide-slate-700">
                 {users.map((user) => (
                   <tr key={user.id} className="hover:bg-slate-700/30 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="h-8 w-8 rounded-full bg-emerald-500/10 flex items-center justify-center mr-3">
                           <UserIcon className="h-4 w-4 text-emerald-500" />
@@ -211,7 +243,7 @@ const AdminPanel = () => {
                         <span className="text-sm font-medium text-white">{user.username}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap hidden md:table-cell">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                         user.role === 'admin' 
                           ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20' 
@@ -221,7 +253,7 @@ const AdminPanel = () => {
                         {user.role}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap">
                       {user.lockoutUntil && new Date(user.lockoutUntil) > new Date() ? (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">
                           Bloqueado
@@ -232,13 +264,13 @@ const AdminPanel = () => {
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                    <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-sm text-slate-300 hidden sm:table-cell">
                       <div className="flex items-center">
                         <Clock className="h-3 w-3 mr-1.5 text-slate-500" />
                         {user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Nunca'}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td className="px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button 
                         onClick={() => openModal(user)}
                         className="text-blue-400 hover:text-blue-300 mr-3"
