@@ -13,6 +13,7 @@ import {
   CalendarDays,
   X,
 } from "lucide-react";
+import TournamentDetailsModal from "../components/Dashboard/TournamentDetailsModal";
 
 const Tournaments = ({
   tournamentsData,
@@ -640,6 +641,13 @@ const Tournaments = ({
           cameras={camerasData}
           tournament={editingTournament}
           isOpen={true}
+        />
+      )}
+
+      {selectedTournament && (
+        <TournamentDetailsModal 
+          tournament={selectedTournament} 
+          onClose={() => setSelectedTournament(null)} 
         />
       )}
     </div>
