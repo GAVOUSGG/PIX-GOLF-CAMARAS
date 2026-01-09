@@ -2,11 +2,11 @@ const API_BASE = import.meta.env.VITE_API_URL || "http://127.0.0.1:3001";
 
 // Función helper mejorada para manejar errores
 const handleResponse = async (response) => {
-  console.log(
-    "🌐 [API] Response status:",
-    response.status,
-    response.statusText
-  );
+  // console.log(
+  //   "🌐 [API] Response status:",
+  //   response.status,
+  //   response.statusText
+  // );
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -26,7 +26,7 @@ const handleResponse = async (response) => {
 export const apiService = {
   // ========== TORNEOS ==========
   async getTournaments() {
-    console.log("🔄 [API] GET /tournaments");
+    // console.log("🔄 [API] GET /tournaments");
     const response = await fetch(`${API_BASE}/tournaments`);
     return await handleResponse(response);
   },
@@ -67,7 +67,7 @@ export const apiService = {
   },
 
   async updateTournament(id, tournament) {
-    console.log(`✏️ [API] PUT /tournaments/${id}`, tournament);
+    // console.log(`✏️ [API] PUT /tournaments/${id}`, tournament);
     const response = await fetch(`${API_BASE}/tournaments/${id}`, {
       method: "PUT",
       headers: {
@@ -85,7 +85,7 @@ export const apiService = {
     }
 
     const result = await response.json();
-    console.log("✅ [API] Torneo actualizado exitosamente:", result);
+    // console.log("✅ [API] Torneo actualizado exitosamente:", result);
     return result;
   },
 
@@ -108,7 +108,7 @@ export const apiService = {
 
   // ========== TRABAJADORES ==========
   async getWorkers() {
-    console.log("🔄 [API] GET /workers");
+    // console.log("🔄 [API] GET /workers");
     const response = await fetch(`${API_BASE}/workers`);
     return await handleResponse(response);
   },
@@ -184,7 +184,7 @@ export const apiService = {
 
   // ========== CÁMARAS ==========
   async getCameras() {
-    console.log("🔄 [API] GET /cameras");
+    // console.log("🔄 [API] GET /cameras");
     const response = await fetch(`${API_BASE}/cameras`);
     return await handleResponse(response);
   },
@@ -265,7 +265,7 @@ export const apiService = {
 
   // ========== ENVÍOS ==========
   async getShipments() {
-    console.log("🔄 [API] GET /shipments");
+    // console.log("🔄 [API] GET /shipments");
     const response = await fetch(`${API_BASE}/shipments`);
     return await handleResponse(response);
   },

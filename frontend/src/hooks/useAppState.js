@@ -91,17 +91,17 @@ export const useAppState = () => {
     const loadData = async () => {
       try {
         setLoading(true);
-        console.log("🔄 [useAppState] Iniciando carga de datos...");
+        // console.log("🔄 [useAppState] Iniciando carga de datos...");
 
         // Intentar cargar desde API
         try {
-          console.log("🌐 [useAppState] Intentando conectar con API...");
+          // console.log("🌐 [useAppState] Intentando conectar con API...");
           const workers = await apiService.getWorkers();
-          console.log(
-            "✅ [useAppState] Datos cargados desde API:",
-            workers.length,
-            "trabajadores"
-          );
+          // console.log(
+          //   "✅ [useAppState] Datos cargados desde API:",
+          //   workers.length,
+          //   "trabajadores"
+          // );
 
           setWorkersData(workers);
           setApiAvailable(true);
@@ -136,7 +136,7 @@ export const useAppState = () => {
         setShipmentsData(initialShipments);
       } finally {
         setLoading(false);
-        console.log("🏁 [useAppState] Carga de datos completada");
+        // console.log("🏁 [useAppState] Carga de datos completada");
       }
     };
 

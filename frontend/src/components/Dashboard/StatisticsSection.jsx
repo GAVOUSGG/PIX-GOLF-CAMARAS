@@ -108,7 +108,7 @@ const StatisticsSection = ({ tournaments }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* Tipos de Torneo Detallados (Horizontal Bar - Full Width en mobile, ocupa 2 cols en desktop grande si se quiere destacar) */}
-        <div className="md:col-span-2 bg-black/20 backdrop-blur-lg rounded-2xl border border-white/10 p-6">
+        <div className="md:col-span-2 bg-black/20 backdrop-blur-lg rounded-2xl border border-white/10 p-6 min-w-0">
            <h4 className="text-gray-300 font-medium mb-4">Tipos de Torneo (Días + Hoyos)</h4>
            <div className="h-[300px] w-full">
              <ResponsiveContainer width="100%" height="100%">
@@ -127,7 +127,7 @@ const StatisticsSection = ({ tournaments }) => {
         </div>
 
         {/* Distribución por Duración (Pie) */}
-        <div className="bg-black/20 backdrop-blur-lg rounded-2xl border border-white/10 p-6">
+        <div className="bg-black/20 backdrop-blur-lg rounded-2xl border border-white/10 p-6 min-w-0">
           <h4 className="text-gray-300 font-medium mb-4">Duración General</h4>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -156,7 +156,7 @@ const StatisticsSection = ({ tournaments }) => {
         </div>
 
         {/* Distribución por Hoyos (Bar) */}
-        <div className="bg-black/20 backdrop-blur-lg rounded-2xl border border-white/10 p-6">
+        <div className="bg-black/20 backdrop-blur-lg rounded-2xl border border-white/10 p-6 min-w-0">
           <h4 className="text-gray-300 font-medium mb-4">Total Hoyos</h4>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -175,7 +175,7 @@ const StatisticsSection = ({ tournaments }) => {
         </div>
 
         {/* Torneos por Estado (Bar) */}
-        <div className="bg-black/20 backdrop-blur-lg rounded-2xl border border-white/10 p-6">
+        <div className="bg-black/20 backdrop-blur-lg rounded-2xl border border-white/10 p-6 min-w-0">
           <h4 className="text-gray-300 font-medium mb-4">Top Estados</h4>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -202,7 +202,7 @@ const StatisticsSection = ({ tournaments }) => {
 
         {/* Actividad Reciente (Area) */}
         {stats.activity.length > 0 && (
-          <div className="md:col-span-2 bg-black/20 backdrop-blur-lg rounded-2xl border border-white/10 p-6">
+          <div className="md:col-span-2 bg-black/20 backdrop-blur-lg rounded-2xl border border-white/10 p-6 min-w-0">
             <h4 className="text-gray-300 font-medium mb-4">Tendencia de Actividad</h4>
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
