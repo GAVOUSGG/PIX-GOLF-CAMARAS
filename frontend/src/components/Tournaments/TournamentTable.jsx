@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Eye, MoreVertical, Edit, Trash2, Calendar } from 'lucide-react';
 import StatusBadge from '../UI/StatusBadge';
-import KeyChecker from '../Debug/KeyChecker';
 
 const TournamentTable = ({ 
   tournaments, 
@@ -55,8 +54,6 @@ const TournamentTable = ({
 
   return (
     <>
-      <KeyChecker data={tournaments} componentName="TournamentTable" />
-      
       <div className="bg-black/20 rounded-2xl border border-white/10 overflow-hidden"> {/* Quitado backdrop-blur-lg temporalmente */}
         <div className="overflow-x-auto">
           <table className="w-full">
